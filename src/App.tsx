@@ -15,11 +15,13 @@ type SimulationState = {
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
   showEclipticReference: boolean
+  moonDistanceExaggeration: number
   setSliderDays: (days: number) => void
   setPlaying: (playing: boolean) => void
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
   setShowEclipticReference: (show: boolean) => void
+  setMoonDistanceExaggeration: (factor: number) => void
   stepDays: (days: number) => void
   tick: (deltaSeconds: number) => void
   resetNow: () => void
@@ -42,6 +44,7 @@ const useSimulationStore = create<SimulationState>((set) => {
     speedDaysPerSecond: 20,
     cameraPreset: 'free',
     showEclipticReference: true,
+    moonDistanceExaggeration: 14,
     setSliderDays: (days) =>
       set((state) => ({
         sliderDays: days,
@@ -51,6 +54,7 @@ const useSimulationStore = create<SimulationState>((set) => {
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
     setShowEclipticReference: (showEclipticReference) => set({ showEclipticReference }),
+    setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     stepDays: (days) =>
       set((state) => {
         const sliderDays = state.sliderDays + days
@@ -100,6 +104,19 @@ function toSceneVector(body: Body, date: Date) {
   const eqjVector = HelioVector(body, date)
   const eclVector = RotateVector(EQJ_TO_ECL, eqjVector)
   return new THREE.Vector3(eclVector.x, eclVector.y, eclVector.z).multiplyScalar(AU_TO_SCENE)
+}
+
+function getBodyPositions(date: Date, moonDistanceExaggeration: number) {
+  const earthPosition = toSceneVector(Body.Earth, date)
+  const moonPhysicalPosition = toSceneVector(Body.Moon, date)
+  const earthToMoon = moonPhysicalPosition.clone().sub(earthPosition)
+  const moonDisplayPosition = earthPosition.clone().add(earthToMoon.multiplyScalar(moonDistanceExaggeration))
+
+  return {
+    earthPosition,
+    moonPhysicalPosition,
+    moonDisplayPosition,
+  }
 }
 
 function CameraController({ preset }: { preset: CameraPreset }) {
@@ -172,13 +189,12 @@ function Sun() {
   )
 }
 
-function Earth({ date }: { date: Date }) {
+function Earth({ position }: { position: THREE.Vector3 }) {
   const earthRef = useRef<THREE.Mesh>(null)
-  const earthPosition = useMemo(() => toSceneVector(Body.Earth, date), [date])
 
   useEffect(() => {
-    earthRef.current?.position.copy(earthPosition)
-  }, [earthPosition])
+    earthRef.current?.position.copy(position)
+  }, [position])
 
   useFrame((_, delta) => {
     if (earthRef.current) {
@@ -194,6 +210,32 @@ function Earth({ date }: { date: Date }) {
   )
 }
 
+function Moon({ position }: { position: THREE.Vector3 }) {
+  const moonRef = useRef<THREE.Mesh>(null)
+
+  useEffect(() => {
+    moonRef.current?.position.copy(position)
+  }, [position])
+
+  useFrame((_, delta) => {
+    if (moonRef.current) {
+      moonRef.current.rotation.y += delta * 0.35
+    }
+  })
+
+  return (
+    <group>
+      <mesh ref={moonRef}>
+        <sphereGeometry args={[0.055, 24, 24]} />
+        <meshStandardMaterial color="#d9dde6" emissive="#343740" emissiveIntensity={0.12} />
+      </mesh>
+      <Text position={[position.x + 0.18, position.y + 0.12, position.z + 0.06]} fontSize={0.22} color="#dce4f2">
+        Moon
+      </Text>
+    </group>
+  )
+}
+
 function EarthOrbit() {
   const points = useMemo(() => {
     const start = new Date('2026-01-01T00:00:00Z')
@@ -206,18 +248,39 @@ function EarthOrbit() {
   return <Line points={points} color="#3b6f9b" lineWidth={1} />
 }
 
-function SunEarthLine({ date }: { date: Date }) {
-  const earthPosition = useMemo(() => toSceneVector(Body.Earth, date), [date])
-  const points = useMemo(() => [new THREE.Vector3(0, 0, 0), earthPosition], [earthPosition])
+function MoonTrack({ date, moonDistanceExaggeration }: { date: Date; moonDistanceExaggeration: number }) {
+  const points = useMemo(() => {
+    const start = new Date(date.getTime() - 20 * MS_PER_DAY)
+    return Array.from({ length: 161 }, (_, index) => {
+      const sampleDate = new Date(start.getTime() + index * 0.25 * MS_PER_DAY)
+      return getBodyPositions(sampleDate, moonDistanceExaggeration).moonDisplayPosition
+    })
+  }, [date, moonDistanceExaggeration])
 
+  return <Line points={points} color="#c4d2ea" lineWidth={0.9} transparent opacity={0.8} />
+}
+
+function SunEarthLine({ earthPosition }: { earthPosition: THREE.Vector3 }) {
+  const points = useMemo(() => [new THREE.Vector3(0, 0, 0), earthPosition], [earthPosition])
   return <Line points={points} color="#88bdf0" lineWidth={1} />
+}
+
+function EarthMoonLine({ earthPosition, moonPosition }: { earthPosition: THREE.Vector3; moonPosition: THREE.Vector3 }) {
+  const points = useMemo(() => [earthPosition, moonPosition], [earthPosition, moonPosition])
+  return <Line points={points} color="#d8deea" lineWidth={1.1} transparent opacity={0.95} />
 }
 
 function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
+  const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const tick = useSimulationStore((state) => state.tick)
+
+  const { earthPosition, moonDisplayPosition } = useMemo(
+    () => getBodyPositions(currentDate, moonDistanceExaggeration),
+    [currentDate, moonDistanceExaggeration],
+  )
 
   useFrame((_, delta) => {
     tick(delta)
@@ -232,9 +295,12 @@ function SimulationScene() {
       <CameraController preset={cameraPreset} />
       {showEclipticReference ? <EclipticReferenceOverlay /> : null}
       <EarthOrbit />
-      <SunEarthLine date={currentDate} />
+      <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
+      <SunEarthLine earthPosition={earthPosition} />
+      <EarthMoonLine earthPosition={earthPosition} moonPosition={moonDisplayPosition} />
       <Sun />
-      <Earth date={currentDate} />
+      <Earth position={earthPosition} />
+      <Moon position={moonDisplayPosition} />
     </>
   )
 }
@@ -246,23 +312,36 @@ function ControlPanel() {
   const speedDaysPerSecond = useSimulationStore((state) => state.speedDaysPerSecond)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
+  const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const setSliderDays = useSimulationStore((state) => state.setSliderDays)
   const setPlaying = useSimulationStore((state) => state.setPlaying)
   const setSpeedDaysPerSecond = useSimulationStore((state) => state.setSpeedDaysPerSecond)
   const setCameraPreset = useSimulationStore((state) => state.setCameraPreset)
   const setShowEclipticReference = useSimulationStore((state) => state.setShowEclipticReference)
+  const setMoonDistanceExaggeration = useSimulationStore((state) => state.setMoonDistanceExaggeration)
   const stepDays = useSimulationStore((state) => state.stepDays)
   const resetNow = useSimulationStore((state) => state.resetNow)
 
-  const earthPosition = useMemo(() => toSceneVector(Body.Earth, currentDate), [currentDate])
+  const { earthPosition, moonPhysicalPosition, moonDisplayPosition } = useMemo(
+    () => getBodyPositions(currentDate, moonDistanceExaggeration),
+    [currentDate, moonDistanceExaggeration],
+  )
+  const physicalEarthMoonDistance = useMemo(
+    () => earthPosition.distanceTo(moonPhysicalPosition),
+    [earthPosition, moonPhysicalPosition],
+  )
+  const displayEarthMoonDistance = useMemo(
+    () => earthPosition.distanceTo(moonDisplayPosition),
+    [earthPosition, moonDisplayPosition],
+  )
 
   return (
     <aside className="control-panel">
       <div>
         <p className="eyebrow">Astrolabium Prototype</p>
-        <h1>Sun-Earth Vertical Slice</h1>
+        <h1>Sun-Earth-Moon Slice</h1>
         <p className="lede">
-          First implementation slice with a real heliocentric Earth position, reversible time controls, camera presets, and a canonical ecliptic reference frame.
+          The current MVP slice uses sampled ephemeris positions in Ecliptic J2000 for the Sun, Earth, and Moon while keeping the UI deliberately light.
         </p>
       </div>
 
@@ -309,10 +388,23 @@ function ControlPanel() {
             Top View
           </button>
         </div>
+        <label className="range-field">
+          <span>Moon distance exaggeration: {moonDistanceExaggeration.toFixed(0)}x</span>
+          <input
+            type="range"
+            min={1}
+            max={30}
+            step={1}
+            value={moonDistanceExaggeration}
+            onChange={(event) => setMoonDistanceExaggeration(Number(event.target.value))}
+          />
+        </label>
         <p className="readout">Earth heliocentric position (scene units)</p>
         <code>
           x {earthPosition.x.toFixed(2)} | y {earthPosition.y.toFixed(2)} | z {earthPosition.z.toFixed(2)}
         </code>
+        <p className="readout">Physical Earth-Moon separation: {physicalEarthMoonDistance.toFixed(3)} scene units</p>
+        <p className="readout">Displayed Earth-Moon separation: {displayEarthMoonDistance.toFixed(3)} scene units</p>
       </section>
 
       <section>
@@ -338,9 +430,10 @@ function ControlPanel() {
         <h2>Notes</h2>
         <ul>
           <li>The Sun is fixed at the origin.</li>
-          <li>Earth position comes from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.</li>
-          <li>Earth orbit is sampled from the ephemeris and rendered in the same Ecliptic J2000 reference frame.</li>
-          <li>Visual sizes are exaggerated; distances are scaled from AU.</li>
+          <li>Earth and Moon positions come from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.</li>
+          <li>The Moon uses display-only Earth-Moon distance exaggeration so the underlying ephemeris remains unchanged.</li>
+          <li>Earth orbit and Moon track are sampled from the ephemeris and rendered in the same Ecliptic J2000 reference frame.</li>
+          <li>Visual sizes and some displayed distances are exaggerated for readability.</li>
         </ul>
       </section>
     </aside>

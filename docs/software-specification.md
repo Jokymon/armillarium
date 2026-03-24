@@ -1,4 +1,4 @@
-﻿# Astrolabium Software Specification
+# Astrolabium Software Specification
 
 ## 1. Purpose
 
@@ -164,6 +164,7 @@ This document defines the first implementation target and the technology directi
 - SR-7: Astro-navigation-oriented values such as declination, hour angle, and altitude shall be derived from the same canonical astronomy model used for the visual scene.
 - SR-8: The definitions and calculations of GHA, LHA, and SHA shall be consistent with standard celestial-navigation convention and clearly associated with the selected body and time.
 - SR-9: Mode switching shall not alter the underlying astronomical state; it shall only change presentation, defaults, and mode-specific tools.
+- SR-10: Display-only exaggeration controls shall alter visualization only; they shall not modify the canonical astronomical positions used by calculations, transforms, or future readouts.
 
 Recommended release-1 tolerance target:
 
@@ -226,6 +227,7 @@ Responsibilities:
 - Simplified Earth globe or map surface for rough geographic orientation and observer selection.
 - Camera presets and transitions.
 - Overlay geometry.
+- Display-only exaggeration of selected relative vectors for visibility without changing the canonical simulation state.
 - Projection lines.
 - Labels and picking.
 
@@ -415,6 +417,7 @@ Conclusion:
 
 - The UI should make frame changes explicit. Users must always know what they are looking at.
 - Scale distortion must be transparent. If radii or distances are exaggerated, the user should be told.
+- Close-range systems such as Earth-Moon may use display-only relative-distance exaggeration when needed for visibility, but the UI should make that exaggeration explicit.
 - Earth land masses should be recognizable but do not need high-resolution political or coastline accuracy in v1.
 - Overlays should use a consistent visual language:
 - Planes: translucent surfaces
