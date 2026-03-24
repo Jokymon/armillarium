@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color: #ecf4fb;
   background: #06111b;
   font-family: "Segoe UI", "Helvetica Neue", sans-serif;
@@ -129,6 +129,20 @@ h2 {
 
 .range-field input {
   width: 100%;
+}
+
+.toggle-field {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.9rem;
+  color: #ecf4fb;
+}
+
+.toggle-field input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #81baf0;
 }
 
 .readout {

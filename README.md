@@ -7,7 +7,7 @@ The current implementation is a first vertical slice:
 - React + TypeScript + Vite frontend
 - Three.js rendering via React Three Fiber
 - Astronomy Engine for real heliocentric body positions
-- Minimal Sun/Earth scene with time controls, camera presets, and a first ecliptic overlay
+- Minimal Sun/Earth scene with time controls, camera presets, and a canonical ecliptic reference frame
 
 ## Current Scope
 
@@ -17,7 +17,8 @@ This repository currently contains:
 - a basic interactive 3D prototype in `src/`
 - reversible time controls for a simple Sun/Earth scene
 - free-camera and top-view presets
-- a translucent ecliptic plane and labeled coordinate axes
+- a master toggle for the ecliptic reference frame
+- a canonical heliocentric frame where the renderer `X-Y` plane is the ecliptic plane
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 
@@ -85,14 +86,17 @@ docs/
 ## Notes
 
 - The Sun is currently fixed at the scene origin.
-- Earth position is derived from Astronomy Engine heliocentric vectors.
-- The ecliptic plane is shown as a simple translucent heliocentric reference plane.
+- Earth position is derived from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.
+- The renderer `X-Y` plane is the Ecliptic J2000 plane.
+- `+X` points toward the J2000 vernal equinox.
+- `+Z` points toward the north ecliptic pole.
+- `+Y` is 90° counterclockwise from `+X` when viewed from ecliptic north.
 - Planet sizes and distances are visually scaled for usability, not strict realism.
-- The current build is a prototype baseline, not yet optimized for bundle size.
+- The sampled Earth orbit is also converted into Ecliptic J2000 before rendering.`r`n- The current build is a prototype baseline, not yet optimized for bundle size.
 
 ## Next Likely Steps
 
 - add additional bodies such as the Moon
-- add overlay toggles and more coordinate-system guides
+- add more coordinate-system guides and overlays
 - start separating simulation logic from rendering components
 - introduce the first Astronomy Mode vs. Navigation Mode UI distinctions
