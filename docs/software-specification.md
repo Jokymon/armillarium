@@ -142,7 +142,9 @@ This document defines the first implementation target and the technology directi
 - FR-26: The system should preserve observer location, selected body, and other shared context when switching between modes where scientifically meaningful.
 - FR-27: The system shall provide explanatory labels for active coordinate systems and overlays.
 - FR-28: The system should include contextual descriptions for major modes such as heliocentric, geocentric, equatorial, and horizontal.
-- FR-29: The system should allow users to select a body and inspect its coordinates in the active frame.`r`n`r`n### 5.7 Astro-navigation features
+- FR-29: The system should allow users to select a body and inspect its coordinates in the active frame.
+
+### 5.7 Astro-navigation features
 
 - FR-30: The system shall support a Navigation Mode centered on Earth-surface observation.
 - FR-31: The system shall display navigational readouts for selected bodies using the explicit terms GHA, LHA, and SHA, together with declination and observed altitude where applicable.
