@@ -1,5 +1,5 @@
-﻿import { Body, HelioVector } from 'astronomy-engine'
-import { Line, OrbitControls } from '@react-three/drei'
+import { Body, HelioVector } from 'astronomy-engine'
+import { Line, OrbitControls, Text } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
@@ -25,6 +25,8 @@ type SimulationState = {
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 const AU_TO_SCENE = 12
+const AXIS_LENGTH = 8
+const ECLIPTIC_RADIUS = 15
 
 const useSimulationStore = create<SimulationState>((set) => {
   const baseDate = new Date()
@@ -112,11 +114,50 @@ function CameraController({ preset }: { preset: CameraPreset }) {
   return <OrbitControls makeDefault enableDamping dampingFactor={0.08} />
 }
 
+function AxisLabels() {
+  return (
+    <group>
+      <Text position={[AXIS_LENGTH + 0.75, 0, 0]} fontSize={0.45} color="#ff8d8d">
+        X
+      </Text>
+      <Text position={[0, AXIS_LENGTH + 0.75, 0]} fontSize={0.45} color="#8fe388">
+        Y
+      </Text>
+      <Text position={[0, 0, AXIS_LENGTH + 0.75]} fontSize={0.45} color="#8cbcff">
+        Z
+      </Text>
+    </group>
+  )
+}
+
+function EclipticPlane() {
+  const outlinePoints = useMemo(() => {
+    return Array.from({ length: 65 }, (_, index) => {
+      const angle = (index / 64) * Math.PI * 2
+      return new THREE.Vector3(Math.cos(angle) * ECLIPTIC_RADIUS, Math.sin(angle) * ECLIPTIC_RADIUS, 0)
+    })
+  }, [])
+
+  return (
+    <group>
+      <mesh rotation={[0, 0, 0]}>
+        <circleGeometry args={[ECLIPTIC_RADIUS, 64]} />
+        <meshBasicMaterial color="#1f5f7a" transparent opacity={0.12} side={THREE.DoubleSide} />
+      </mesh>
+      <Line points={outlinePoints} color="#64b3d5" lineWidth={1} />
+      <Text position={[5.6, -5.6, 0]} fontSize={0.38} color="#8ccae6">
+        Ecliptic Plane
+      </Text>
+    </group>
+  )
+}
+
 function AxesAndGrid() {
   return (
     <group>
-      <axesHelper args={[8]} />
+      <axesHelper args={[AXIS_LENGTH]} />
       <gridHelper args={[40, 20, '#36566e', '#1e2d39']} rotation={[Math.PI / 2, 0, 0]} />
+      <AxisLabels />
     </group>
   )
 }
@@ -187,6 +228,7 @@ function SimulationScene() {
       <ambientLight intensity={0.25} />
       <pointLight position={[0, 0, 0]} intensity={900} decay={2} color="#fff1c1" />
       <CameraController preset={cameraPreset} />
+      <EclipticPlane />
       <AxesAndGrid />
       <EarthOrbit />
       <SunEarthLine date={currentDate} />
@@ -217,7 +259,7 @@ function ControlPanel() {
         <p className="eyebrow">Astrolabium Prototype</p>
         <h1>Sun-Earth Vertical Slice</h1>
         <p className="lede">
-          First implementation slice with a real heliocentric Earth position, reversible time controls, and two camera presets.
+          First implementation slice with a real heliocentric Earth position, reversible time controls, camera presets, and a basic ecliptic overlay.
         </p>
       </div>
 
@@ -268,6 +310,15 @@ function ControlPanel() {
         <code>
           x {earthPosition.x.toFixed(2)} | y {earthPosition.y.toFixed(2)} | z {earthPosition.z.toFixed(2)}
         </code>
+      </section>
+
+      <section>
+        <h2>Overlays</h2>
+        <ul>
+          <li>Translucent ecliptic plane centered on the Sun</li>
+          <li>Labeled X, Y, Z axes for scene orientation</li>
+          <li>Earth orbit trace for heliocentric context</li>
+        </ul>
       </section>
 
       <section>

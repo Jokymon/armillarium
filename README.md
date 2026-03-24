@@ -7,7 +7,7 @@ The current implementation is a first vertical slice:
 - React + TypeScript + Vite frontend
 - Three.js rendering via React Three Fiber
 - Astronomy Engine for real heliocentric body positions
-- Minimal Sun/Earth scene with time controls and camera presets
+- Minimal Sun/Earth scene with time controls, camera presets, and a first ecliptic overlay
 
 ## Current Scope
 
@@ -17,6 +17,7 @@ This repository currently contains:
 - a basic interactive 3D prototype in `src/`
 - reversible time controls for a simple Sun/Earth scene
 - free-camera and top-view presets
+- a translucent ecliptic plane and labeled coordinate axes
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 
@@ -73,7 +74,7 @@ npm run preview
 
 ```text
 src/                    Application source code
-  App.tsx               Main prototype UI and 3D scene
+  App.tsx               Main prototype UI, scene, and overlays
   main.tsx              React entry point
   styles.css            Basic application styling
 
@@ -85,12 +86,13 @@ docs/
 
 - The Sun is currently fixed at the scene origin.
 - Earth position is derived from Astronomy Engine heliocentric vectors.
+- The ecliptic plane is shown as a simple translucent heliocentric reference plane.
 - Planet sizes and distances are visually scaled for usability, not strict realism.
 - The current build is a prototype baseline, not yet optimized for bundle size.
 
 ## Next Likely Steps
 
 - add additional bodies such as the Moon
-- add the first scientific overlays, likely the ecliptic plane
+- add overlay toggles and more coordinate-system guides
 - start separating simulation logic from rendering components
 - introduce the first Astronomy Mode vs. Navigation Mode UI distinctions
