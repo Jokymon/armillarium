@@ -1,18 +1,14 @@
-﻿import { Body, HelioVector, RotateVector, Rotation_EQJ_ECL } from 'astronomy-engine'
+import { Body } from 'astronomy-engine'
 import { Line, OrbitControls, Text } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { create } from 'zustand'
+import { getBodyPositions, toSceneVector } from './astronomy/positions'
+import { getEclipticReadout } from './astronomy/readouts'
 
 type CameraPreset = 'free' | 'top'
 type SelectableBody = 'Sun' | 'Earth' | 'Moon'
-
-type EclipticReadout = {
-  longitudeDeg: number | null
-  latitudeDeg: number | null
-  distanceAu: number
-}
 
 type SimulationState = {
   baseDate: Date
@@ -37,10 +33,8 @@ type SimulationState = {
 }
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000
-const AU_TO_SCENE = 12
 const AXIS_LENGTH = 8
 const ECLIPTIC_RADIUS = 15
-const EQJ_TO_ECL = Rotation_EQJ_ECL()
 const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Earth', 'Moon']
 
 const useSimulationStore = create<SimulationState>((set) => {
@@ -118,51 +112,6 @@ function formatDegrees(value: number | null) {
 
 function formatDistanceAu(value: number) {
   return `${value.toFixed(6)} AU`
-}
-
-function toEclipticVectorAu(body: Body, date: Date) {
-  const eqjVector = HelioVector(body, date)
-  const eclVector = RotateVector(EQJ_TO_ECL, eqjVector)
-  return new THREE.Vector3(eclVector.x, eclVector.y, eclVector.z)
-}
-
-function toSceneVector(body: Body, date: Date) {
-  return toEclipticVectorAu(body, date).multiplyScalar(AU_TO_SCENE)
-}
-
-function getBodyPositions(date: Date, moonDistanceExaggeration: number) {
-  const earthPosition = toSceneVector(Body.Earth, date)
-  const moonPhysicalPosition = toSceneVector(Body.Moon, date)
-  const earthToMoon = moonPhysicalPosition.clone().sub(earthPosition)
-  const moonDisplayPosition = earthPosition.clone().add(earthToMoon.multiplyScalar(moonDistanceExaggeration))
-
-  return {
-    earthPosition,
-    moonPhysicalPosition,
-    moonDisplayPosition,
-  }
-}
-
-function getEclipticReadout(body: SelectableBody, date: Date): EclipticReadout {
-  const vector = toEclipticVectorAu(body as Body, date)
-  const distanceAu = vector.length()
-
-  if (distanceAu === 0) {
-    return {
-      longitudeDeg: null,
-      latitudeDeg: null,
-      distanceAu: 0,
-    }
-  }
-
-  const longitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.y, vector.x))
-  const latitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.z, Math.hypot(vector.x, vector.y)))
-
-  return {
-    longitudeDeg: THREE.MathUtils.euclideanModulo(longitudeDeg, 360),
-    latitudeDeg,
-    distanceAu,
-  }
 }
 
 function CameraController({ preset }: { preset: CameraPreset }) {
@@ -440,7 +389,7 @@ function ControlPanel() {
     () => earthPosition.distanceTo(moonDisplayPosition),
     [earthPosition, moonDisplayPosition],
   )
-  const selectedBodyReadout = useMemo(() => getEclipticReadout(selectedBody, currentDate), [selectedBody, currentDate])
+  const selectedBodyReadout = useMemo(() => getEclipticReadout(selectedBody as Body, currentDate), [selectedBody, currentDate])
 
   return (
     <aside className="control-panel">
