@@ -1,4 +1,4 @@
-import { Body, HelioVector, RotateVector, Rotation_EQJ_ECL } from 'astronomy-engine'
+﻿import { Body, HelioVector, RotateVector, Rotation_EQJ_ECL } from 'astronomy-engine'
 import { Line, OrbitControls, Text } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
@@ -6,6 +6,13 @@ import * as THREE from 'three'
 import { create } from 'zustand'
 
 type CameraPreset = 'free' | 'top'
+type SelectableBody = 'Sun' | 'Earth' | 'Moon'
+
+type EclipticReadout = {
+  longitudeDeg: number | null
+  latitudeDeg: number | null
+  distanceAu: number
+}
 
 type SimulationState = {
   baseDate: Date
@@ -16,12 +23,14 @@ type SimulationState = {
   cameraPreset: CameraPreset
   showEclipticReference: boolean
   moonDistanceExaggeration: number
+  selectedBody: SelectableBody
   setSliderDays: (days: number) => void
   setPlaying: (playing: boolean) => void
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
   setShowEclipticReference: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
+  setSelectedBody: (body: SelectableBody) => void
   stepDays: (days: number) => void
   tick: (deltaSeconds: number) => void
   resetNow: () => void
@@ -32,6 +41,7 @@ const AU_TO_SCENE = 12
 const AXIS_LENGTH = 8
 const ECLIPTIC_RADIUS = 15
 const EQJ_TO_ECL = Rotation_EQJ_ECL()
+const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Earth', 'Moon']
 
 const useSimulationStore = create<SimulationState>((set) => {
   const baseDate = new Date()
@@ -45,6 +55,7 @@ const useSimulationStore = create<SimulationState>((set) => {
     cameraPreset: 'free',
     showEclipticReference: true,
     moonDistanceExaggeration: 14,
+    selectedBody: 'Earth',
     setSliderDays: (days) =>
       set((state) => ({
         sliderDays: days,
@@ -55,6 +66,7 @@ const useSimulationStore = create<SimulationState>((set) => {
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
     setShowEclipticReference: (showEclipticReference) => set({ showEclipticReference }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
+    setSelectedBody: (selectedBody) => set({ selectedBody }),
     stepDays: (days) =>
       set((state) => {
         const sliderDays = state.sliderDays + days
@@ -100,10 +112,22 @@ function formatDate(date: Date) {
   }).format(date)
 }
 
-function toSceneVector(body: Body, date: Date) {
+function formatDegrees(value: number | null) {
+  return value === null ? 'n/a' : `${value.toFixed(3)}°`
+}
+
+function formatDistanceAu(value: number) {
+  return `${value.toFixed(6)} AU`
+}
+
+function toEclipticVectorAu(body: Body, date: Date) {
   const eqjVector = HelioVector(body, date)
   const eclVector = RotateVector(EQJ_TO_ECL, eqjVector)
-  return new THREE.Vector3(eclVector.x, eclVector.y, eclVector.z).multiplyScalar(AU_TO_SCENE)
+  return new THREE.Vector3(eclVector.x, eclVector.y, eclVector.z)
+}
+
+function toSceneVector(body: Body, date: Date) {
+  return toEclipticVectorAu(body, date).multiplyScalar(AU_TO_SCENE)
 }
 
 function getBodyPositions(date: Date, moonDistanceExaggeration: number) {
@@ -116,6 +140,28 @@ function getBodyPositions(date: Date, moonDistanceExaggeration: number) {
     earthPosition,
     moonPhysicalPosition,
     moonDisplayPosition,
+  }
+}
+
+function getEclipticReadout(body: SelectableBody, date: Date): EclipticReadout {
+  const vector = toEclipticVectorAu(body as Body, date)
+  const distanceAu = vector.length()
+
+  if (distanceAu === 0) {
+    return {
+      longitudeDeg: null,
+      latitudeDeg: null,
+      distanceAu: 0,
+    }
+  }
+
+  const longitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.y, vector.x))
+  const latitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.z, Math.hypot(vector.x, vector.y)))
+
+  return {
+    longitudeDeg: THREE.MathUtils.euclideanModulo(longitudeDeg, 360),
+    latitudeDeg,
+    distanceAu,
   }
 }
 
@@ -180,16 +226,69 @@ function EclipticReferenceOverlay() {
   )
 }
 
-function Sun() {
+function SelectionHalo({ position, radius, color }: { position: THREE.Vector3; radius: number; color: string }) {
+  const haloRef = useRef<THREE.Mesh>(null)
+  const ringRef = useRef<THREE.Mesh>(null)
+
+  useEffect(() => {
+    haloRef.current?.position.copy(position)
+    ringRef.current?.position.copy(position)
+  }, [position])
+
+  useFrame(({ camera, clock }) => {
+    const pulse = 1 + Math.sin(clock.elapsedTime * 3.2) * 0.16
+
+    if (haloRef.current) {
+      haloRef.current.scale.setScalar(pulse)
+    }
+
+    if (ringRef.current) {
+      ringRef.current.scale.setScalar(1 + Math.sin(clock.elapsedTime * 3.2 + 0.7) * 0.1)
+      ringRef.current.lookAt(camera.position)
+    }
+  })
+
   return (
-    <mesh>
-      <sphereGeometry args={[0.45, 32, 32]} />
-      <meshBasicMaterial color="#f7c651" />
-    </mesh>
+    <group renderOrder={1000}>
+      <mesh ref={haloRef} renderOrder={1000}>
+        <sphereGeometry args={[radius, 28, 28]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.34}
+          side={THREE.BackSide}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh ref={ringRef} renderOrder={1001}>
+        <ringGeometry args={[radius * 1.18, radius * 1.42, 48]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.95}
+          side={THREE.DoubleSide}
+          depthTest={false}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
   )
 }
 
-function Earth({ position }: { position: THREE.Vector3 }) {
+function Sun({ isSelected }: { isSelected: boolean }) {
+  return (
+    <group>
+      {isSelected ? <SelectionHalo position={new THREE.Vector3(0, 0, 0)} radius={0.62} color="#ffe27b" /> : null}
+      <mesh>
+        <sphereGeometry args={[0.45, 32, 32]} />
+        <meshBasicMaterial color="#f7c651" />
+      </mesh>
+    </group>
+  )
+}
+
+function Earth({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   const earthRef = useRef<THREE.Mesh>(null)
 
   useEffect(() => {
@@ -203,14 +302,17 @@ function Earth({ position }: { position: THREE.Vector3 }) {
   })
 
   return (
-    <mesh ref={earthRef}>
-      <sphereGeometry args={[0.16, 32, 32]} />
-      <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
-    </mesh>
+    <group>
+      {isSelected ? <SelectionHalo position={position} radius={0.23} color="#8dd3ff" /> : null}
+      <mesh ref={earthRef}>
+        <sphereGeometry args={[0.16, 32, 32]} />
+        <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
+      </mesh>
+    </group>
   )
 }
 
-function Moon({ position }: { position: THREE.Vector3 }) {
+function Moon({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   const moonRef = useRef<THREE.Mesh>(null)
 
   useEffect(() => {
@@ -225,6 +327,7 @@ function Moon({ position }: { position: THREE.Vector3 }) {
 
   return (
     <group>
+      {isSelected ? <SelectionHalo position={position} radius={0.095} color="#ffffff" /> : null}
       <mesh ref={moonRef}>
         <sphereGeometry args={[0.055, 24, 24]} />
         <meshStandardMaterial color="#d9dde6" emissive="#343740" emissiveIntensity={0.12} />
@@ -275,6 +378,7 @@ function SimulationScene() {
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
+  const selectedBody = useSimulationStore((state) => state.selectedBody)
   const tick = useSimulationStore((state) => state.tick)
 
   const { earthPosition, moonDisplayPosition } = useMemo(
@@ -298,9 +402,9 @@ function SimulationScene() {
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
       <SunEarthLine earthPosition={earthPosition} />
       <EarthMoonLine earthPosition={earthPosition} moonPosition={moonDisplayPosition} />
-      <Sun />
-      <Earth position={earthPosition} />
-      <Moon position={moonDisplayPosition} />
+      <Sun isSelected={selectedBody === 'Sun'} />
+      <Earth position={earthPosition} isSelected={selectedBody === 'Earth'} />
+      <Moon position={moonDisplayPosition} isSelected={selectedBody === 'Moon'} />
     </>
   )
 }
@@ -313,12 +417,14 @@ function ControlPanel() {
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
+  const selectedBody = useSimulationStore((state) => state.selectedBody)
   const setSliderDays = useSimulationStore((state) => state.setSliderDays)
   const setPlaying = useSimulationStore((state) => state.setPlaying)
   const setSpeedDaysPerSecond = useSimulationStore((state) => state.setSpeedDaysPerSecond)
   const setCameraPreset = useSimulationStore((state) => state.setCameraPreset)
   const setShowEclipticReference = useSimulationStore((state) => state.setShowEclipticReference)
   const setMoonDistanceExaggeration = useSimulationStore((state) => state.setMoonDistanceExaggeration)
+  const setSelectedBody = useSimulationStore((state) => state.setSelectedBody)
   const stepDays = useSimulationStore((state) => state.stepDays)
   const resetNow = useSimulationStore((state) => state.resetNow)
 
@@ -334,6 +440,7 @@ function ControlPanel() {
     () => earthPosition.distanceTo(moonDisplayPosition),
     [earthPosition, moonDisplayPosition],
   )
+  const selectedBodyReadout = useMemo(() => getEclipticReadout(selectedBody, currentDate), [selectedBody, currentDate])
 
   return (
     <aside className="control-panel">
@@ -408,6 +515,21 @@ function ControlPanel() {
       </section>
 
       <section>
+        <h2>Body Data</h2>
+        <div className="button-row">
+          {SELECTABLE_BODIES.map((body) => (
+            <button key={body} className={selectedBody === body ? 'active' : ''} onClick={() => setSelectedBody(body)}>
+              {body}
+            </button>
+          ))}
+        </div>
+        <p className="readout">Selected body: {selectedBody}</p>
+        <p className="readout">l: {formatDegrees(selectedBodyReadout.longitudeDeg)}</p>
+        <p className="readout">b: {formatDegrees(selectedBodyReadout.latitudeDeg)}</p>
+        <p className="readout">Δ: {formatDistanceAu(selectedBodyReadout.distanceAu)}</p>
+      </section>
+
+      <section>
         <h2>Ecliptic Reference</h2>
         <label className="toggle-field">
           <input
@@ -431,6 +553,7 @@ function ControlPanel() {
         <ul>
           <li>The Sun is fixed at the origin.</li>
           <li>Earth and Moon positions come from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.</li>
+          <li>The Body Data panel uses the physical ecliptic coordinates, not the exaggerated Moon display position.</li>
           <li>The Moon uses display-only Earth-Moon distance exaggeration so the underlying ephemeris remains unchanged.</li>
           <li>Earth orbit and Moon track are sampled from the ephemeris and rendered in the same Ecliptic J2000 reference frame.</li>
           <li>Visual sizes and some displayed distances are exaggerated for readability.</li>

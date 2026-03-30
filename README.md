@@ -1,4 +1,4 @@
-# Astrolabium
+﻿# Astrolabium
 
 Astrolabium is a web-based prototype for exploring the Solar System across time, viewpoints, and astronomical coordinate systems.
 
@@ -20,6 +20,7 @@ This repository currently contains:
 - a master toggle for the ecliptic reference frame
 - a canonical heliocentric frame where the renderer `X-Y` plane is the ecliptic plane
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth
+- a simple body selector with heliocentric ecliptic readout for l, b, and Δ in AU
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 
@@ -88,6 +89,7 @@ docs/
 
 - The Sun is currently fixed at the scene origin.
 - Earth and Moon positions are derived from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.
+- The body-data panel reports physical ecliptic longitude l, latitude b, and distance Δ in AU for Sun, Earth, and Moon.
 - The renderer `X-Y` plane is the Ecliptic J2000 plane.
 - `+X` points toward the J2000 vernal equinox.
 - `+Z` points toward the north ecliptic pole.
