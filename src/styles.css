@@ -19,6 +19,7 @@ body,
 
 body {
   min-height: 100vh;
+  overflow: hidden;
 }
 
 button,
@@ -55,13 +56,32 @@ code {
 .app-shell {
   display: grid;
   grid-template-columns: minmax(320px, 380px) 1fr;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .control-panel {
-  padding: 1.5rem;
   border-right: 1px solid rgba(129, 186, 240, 0.16);
   background: linear-gradient(180deg, #0b1c2b 0%, #091521 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.control-panel-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 1.5rem 1.5rem 1rem;
+  background: linear-gradient(180deg, rgba(11, 28, 43, 0.98) 0%, rgba(9, 21, 33, 0.94) 100%);
+  border-bottom: 1px solid rgba(129, 186, 240, 0.12);
+}
+
+.control-panel-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.4rem 1.5rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
@@ -76,11 +96,15 @@ code {
 }
 
 .viewport {
-  min-height: 100vh;
+  min-height: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .viewport canvas {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .eyebrow {
@@ -200,11 +224,16 @@ ul {
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(60vh, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(50vh, 1fr);
+    height: 100vh;
   }
 
   .control-panel {
     border-right: none;
     border-bottom: 1px solid rgba(129, 186, 240, 0.16);
+  }
+
+  body {
+    overflow: hidden;
   }
 }

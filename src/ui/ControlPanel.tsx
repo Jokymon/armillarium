@@ -7,16 +7,17 @@ import { ViewPanel } from './panels/ViewPanel'
 export function ControlPanel() {
   return (
     <aside className="control-panel">
-      <div>
+      <div className="control-panel-header">
         <p className="eyebrow">Astrolabium</p>
         <h1>Sun-Earth-Moon</h1>
       </div>
-
-      <TimePanel />
-      <ViewPanel />
-      <BodyDataPanel />
-      <EclipticReferencePanel />
-      <DebugPanel />
+      <div className="control-panel-content">
+        <TimePanel />
+        <ViewPanel />
+        <BodyDataPanel />
+        <EclipticReferencePanel />
+        <DebugPanel />
+      </div>
     </aside>
   )
 }
