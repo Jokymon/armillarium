@@ -6,7 +6,7 @@ import { useSimulationStore } from '../state/simulation-store'
 import { Earth, Moon, Sun } from './bodies'
 import { CameraController } from './CameraController'
 import { EarthMoonLine, EarthOrbit, MoonTrack, SunEarthLine } from './guides'
-import { EclipticReferenceOverlay } from './overlays'
+import { EclipticReferenceOverlay, GeocentricEquatorialOverlay } from './overlays'
 
 const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
 
@@ -14,6 +14,7 @@ export function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
+  const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const selectedBody = useSimulationStore((state) => state.selectedBody)
   const readoutReferenceFrame = useSimulationStore((state) => state.readoutReferenceFrame)
@@ -41,6 +42,7 @@ export function SimulationScene() {
       <pointLight position={[0, 0, 0]} intensity={900} decay={2} color="#fff1c1" />
       <CameraController preset={cameraPreset} />
       {showEclipticReference ? <EclipticReferenceOverlay origin={frameOrigin} frameLabel={frameLabel} /> : null}
+      {showGeocentricEquatorial ? <GeocentricEquatorialOverlay origin={earthPosition} /> : null}
       <EarthOrbit />
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
       <SunEarthLine earthPosition={earthPosition} />

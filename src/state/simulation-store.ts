@@ -12,6 +12,7 @@ export type SimulationState = {
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
   showEclipticReference: boolean
+  showGeocentricEquatorial: boolean
   moonDistanceExaggeration: number
   selectedBody: SelectableBody
   readoutReferenceFrame: ReadoutReferenceFrame
@@ -20,6 +21,7 @@ export type SimulationState = {
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
   setShowEclipticReference: (show: boolean) => void
+  setShowGeocentricEquatorial: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
   setReadoutReferenceFrame: (frame: ReadoutReferenceFrame) => void
@@ -58,6 +60,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     speedDaysPerSecond: 20,
     cameraPreset: 'free',
     showEclipticReference: true,
+    showGeocentricEquatorial: false,
     moonDistanceExaggeration: 14,
     selectedBody: 'Earth',
     readoutReferenceFrame: 'heliocentric-ecliptic-j2000',
@@ -70,6 +73,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
     setShowEclipticReference: (showEclipticReference) => set({ showEclipticReference }),
+    setShowGeocentricEquatorial: (showGeocentricEquatorial) => set({ showGeocentricEquatorial }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),
     setReadoutReferenceFrame: (readoutReferenceFrame) => set({ readoutReferenceFrame }),
