@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
-export type SelectableBody = 'Sun' | 'Earth' | 'Moon'
+export type SelectableBody = 'Sun' | 'Venus' | 'Earth' | 'Mars' | 'Jupiter' | 'Moon'
 export type ReadoutReferenceFrame =
   | 'heliocentric-ecliptic-j2000'
   | 'geocentric-ecliptic-j2000'
@@ -36,7 +36,7 @@ export type SimulationState = {
 }
 
 export const MS_PER_DAY = 24 * 60 * 60 * 1000
-export const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Earth', 'Moon']
+export const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Moon']
 export const READOUT_REFERENCE_FRAME_OPTIONS: Array<{
   value: ReadoutReferenceFrame
   shortLabel: string

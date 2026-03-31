@@ -106,6 +106,8 @@ function Planet({
   emissive,
   emissiveIntensity,
   rotationSpeed,
+  isSelected,
+  haloColor,
 }: {
   position: THREE.Vector3
   radius: number
@@ -113,6 +115,8 @@ function Planet({
   emissive: string
   emissiveIntensity: number
   rotationSpeed: number
+  isSelected: boolean
+  haloColor: string
 }) {
   const planetRef = useRef<THREE.Mesh>(null)
 
@@ -127,14 +131,17 @@ function Planet({
   })
 
   return (
-    <mesh ref={planetRef}>
-      <sphereGeometry args={[radius, 28, 28]} />
-      <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={emissiveIntensity} />
-    </mesh>
+    <group>
+      {isSelected ? <SelectionHalo position={position} radius={radius * 1.45} color={haloColor} /> : null}
+      <mesh ref={planetRef}>
+        <sphereGeometry args={[radius, 28, 28]} />
+        <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={emissiveIntensity} />
+      </mesh>
+    </group>
   )
 }
 
-export function Venus({ position }: { position: THREE.Vector3 }) {
+export function Venus({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   return (
     <Planet
       position={position}
@@ -143,11 +150,13 @@ export function Venus({ position }: { position: THREE.Vector3 }) {
       emissive="#4f3320"
       emissiveIntensity={0.14}
       rotationSpeed={0.18}
+      isSelected={isSelected}
+      haloColor="#efd0a0"
     />
   )
 }
 
-export function Mars({ position }: { position: THREE.Vector3 }) {
+export function Mars({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   return (
     <Planet
       position={position}
@@ -156,11 +165,13 @@ export function Mars({ position }: { position: THREE.Vector3 }) {
       emissive="#4f1e15"
       emissiveIntensity={0.15}
       rotationSpeed={0.4}
+      isSelected={isSelected}
+      haloColor="#f19976"
     />
   )
 }
 
-export function Jupiter({ position }: { position: THREE.Vector3 }) {
+export function Jupiter({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   return (
     <Planet
       position={position}
@@ -169,6 +180,8 @@ export function Jupiter({ position }: { position: THREE.Vector3 }) {
       emissive="#5b3827"
       emissiveIntensity={0.16}
       rotationSpeed={0.95}
+      isSelected={isSelected}
+      haloColor="#f0c7a1"
     />
   )
 }

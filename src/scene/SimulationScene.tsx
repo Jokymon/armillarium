@@ -69,10 +69,10 @@ export function SimulationScene() {
       <SunEarthLine earthPosition={earthPosition} />
       <EarthMoonLine earthPosition={earthPosition} moonPosition={moonDisplayPosition} />
       <Sun isSelected={selectedBody === 'Sun'} />
-      <Venus position={venusPosition} />
+      <Venus position={venusPosition} isSelected={selectedBody === 'Venus'} />
       <Earth position={earthPosition} isSelected={selectedBody === 'Earth'} />
-      <Mars position={marsPosition} />
-      <Jupiter position={jupiterPosition} />
+      <Mars position={marsPosition} isSelected={selectedBody === 'Mars'} />
+      <Jupiter position={jupiterPosition} isSelected={selectedBody === 'Jupiter'} />
       <Moon position={moonDisplayPosition} isSelected={selectedBody === 'Moon'} />
     </>
   )
