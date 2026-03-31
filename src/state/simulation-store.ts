@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
 export type SelectableBody = 'Sun' | 'Earth' | 'Moon'
+export type ReadoutReferenceFrame = 'heliocentric-ecliptic-j2000' | 'geocentric-ecliptic-j2000'
 
 export type SimulationState = {
   baseDate: Date
@@ -13,6 +14,7 @@ export type SimulationState = {
   showEclipticReference: boolean
   moonDistanceExaggeration: number
   selectedBody: SelectableBody
+  readoutReferenceFrame: ReadoutReferenceFrame
   setSliderDays: (days: number) => void
   setPlaying: (playing: boolean) => void
   setSpeedDaysPerSecond: (speed: number) => void
@@ -20,6 +22,7 @@ export type SimulationState = {
   setShowEclipticReference: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
+  setReadoutReferenceFrame: (frame: ReadoutReferenceFrame) => void
   stepDays: (days: number) => void
   tick: (deltaSeconds: number) => void
   resetNow: () => void
@@ -27,6 +30,22 @@ export type SimulationState = {
 
 export const MS_PER_DAY = 24 * 60 * 60 * 1000
 export const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Earth', 'Moon']
+export const READOUT_REFERENCE_FRAME_OPTIONS: Array<{
+  value: ReadoutReferenceFrame
+  shortLabel: string
+  label: string
+}> = [
+  {
+    value: 'heliocentric-ecliptic-j2000',
+    shortLabel: 'Heliocentric',
+    label: 'Heliocentric Ecliptic J2000',
+  },
+  {
+    value: 'geocentric-ecliptic-j2000',
+    shortLabel: 'Geocentric',
+    label: 'Geocentric Ecliptic J2000',
+  },
+]
 
 export const useSimulationStore = create<SimulationState>((set) => {
   const baseDate = new Date()
@@ -41,6 +60,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     showEclipticReference: true,
     moonDistanceExaggeration: 14,
     selectedBody: 'Earth',
+    readoutReferenceFrame: 'heliocentric-ecliptic-j2000',
     setSliderDays: (days) =>
       set((state) => ({
         sliderDays: days,
@@ -52,6 +72,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setShowEclipticReference: (showEclipticReference) => set({ showEclipticReference }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),
+    setReadoutReferenceFrame: (readoutReferenceFrame) => set({ readoutReferenceFrame }),
     stepDays: (days) =>
       set((state) => {
         const sliderDays = state.sliderDays + days

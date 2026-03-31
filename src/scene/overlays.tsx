@@ -21,7 +21,7 @@ function AxisLabels() {
   )
 }
 
-export function EclipticReferenceOverlay() {
+export function EclipticReferenceOverlay({ origin, frameLabel }: { origin: THREE.Vector3; frameLabel: string }) {
   const outlinePoints = useMemo(() => {
     return Array.from({ length: 65 }, (_, index) => {
       const angle = (index / 64) * Math.PI * 2
@@ -30,7 +30,7 @@ export function EclipticReferenceOverlay() {
   }, [])
 
   return (
-    <group>
+    <group position={origin.toArray()}>
       {/* Astronomy convention for this prototype: the renderer X-Y plane is the ecliptic plane. */}
       <mesh>
         <circleGeometry args={[ECLIPTIC_RADIUS, 64]} />
@@ -41,7 +41,7 @@ export function EclipticReferenceOverlay() {
       <Line points={[[0, -AXIS_LENGTH, 0], [0, AXIS_LENGTH, 0]]} color="#8fe388" lineWidth={1.25} />
       <Line points={[[0, 0, -AXIS_LENGTH], [0, 0, AXIS_LENGTH]]} color="#8cbcff" lineWidth={1.25} />
       <Text position={[6.2, -6.2, 0]} fontSize={0.34} color="#8ccae6">
-        Ecliptic Reference Frame
+        {frameLabel}
       </Text>
       <AxisLabels />
     </group>
