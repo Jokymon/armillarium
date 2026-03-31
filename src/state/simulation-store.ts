@@ -12,6 +12,7 @@ export type SimulationState = {
   currentDate: Date
   sliderDays: number
   playing: boolean
+  stepIncrementDays: number
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
   showHeliocentricEcliptic: boolean
@@ -22,6 +23,7 @@ export type SimulationState = {
   readoutReferenceFrame: ReadoutReferenceFrame
   setSliderDays: (days: number) => void
   setPlaying: (playing: boolean) => void
+  setStepIncrementDays: (days: number) => void
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
   setShowHeliocentricEcliptic: (show: boolean) => void
@@ -37,6 +39,21 @@ export type SimulationState = {
 
 export const MS_PER_DAY = 24 * 60 * 60 * 1000
 export const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Moon']
+export const STEP_INCREMENT_OPTIONS = [
+  { days: 1 / 24, label: '1h' },
+  { days: 6 / 24, label: '6h' },
+  { days: 1, label: '1d' },
+  { days: 10, label: '10d' },
+  { days: 30, label: '30d' },
+] as const
+export const PLAYBACK_RATE_OPTIONS = [
+  { daysPerSecond: 1 / 24, label: '1h/s' },
+  { daysPerSecond: 6 / 24, label: '6h/s' },
+  { daysPerSecond: 1, label: '1d/s' },
+  { daysPerSecond: 10, label: '10d/s' },
+  { daysPerSecond: 30, label: '30d/s' },
+  { daysPerSecond: 100, label: '100d/s' },
+] as const
 export const READOUT_REFERENCE_FRAME_OPTIONS: Array<{
   value: ReadoutReferenceFrame
   shortLabel: string
@@ -67,7 +84,8 @@ export const useSimulationStore = create<SimulationState>((set) => {
     currentDate: baseDate,
     sliderDays: 0,
     playing: false,
-    speedDaysPerSecond: 20,
+    stepIncrementDays: 1,
+    speedDaysPerSecond: 1,
     cameraPreset: 'free',
     showHeliocentricEcliptic: true,
     showGeocentricEcliptic: false,
@@ -81,6 +99,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
         currentDate: new Date(state.baseDate.getTime() + days * MS_PER_DAY),
       })),
     setPlaying: (playing) => set({ playing }),
+    setStepIncrementDays: (stepIncrementDays) => set({ stepIncrementDays }),
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
     setShowHeliocentricEcliptic: (showHeliocentricEcliptic) => set({ showHeliocentricEcliptic }),

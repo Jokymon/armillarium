@@ -152,6 +152,25 @@ h2 {
   margin-top: 0.9rem;
 }
 
+.segmented-field {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+}
+
+.segmented-field span {
+  color: #bfd8ee;
+}
+
+.compact-buttons {
+  gap: 0.45rem;
+}
+
+.compact-buttons button {
+  padding: 0.45rem 0.8rem;
+  min-width: 0;
+}
+
 .range-field input {
   width: 100%;
 }

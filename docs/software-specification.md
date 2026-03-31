@@ -84,8 +84,8 @@ This document defines the first implementation target and the technology directi
 ### 5.1 Time system
 
 - FR-1: The system shall support continuous time navigation forward and backward.
-- FR-2: The system shall support paused, stepwise, and animated time control.
-- FR-3: The system shall support multiple time rates, from slow instructional stepping to accelerated multi-year playback.
+- FR-2: The system shall support paused, stepwise, and animated time control, with step increments and playback rates configurable independently.
+- FR-3: The system shall support multiple discrete step increments and multiple playback-rate presets, ranging from hourly instructional changes to accelerated multi-year playback.
 - FR-4: The system shall expose the current simulation time in UTC and Julian date.
 - FR-5: The system should later support other time standards where scientifically useful, such as TT/TDB, but UTC is sufficient for the first release UI.
 
@@ -242,6 +242,7 @@ Responsibilities:
 Responsibilities:
 
 - Timeline and playback controls.
+- Independently selectable time-step increments and playback-rate presets.
 - Mode switching.
 - Location picking aided by visible continents or land-mass outlines.
 - Overlay toggles that are independent from body-data readout frame selection.
