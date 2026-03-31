@@ -67,7 +67,8 @@ code {
   gap: 1.4rem;
 }
 
-.control-panel section {
+.control-panel section,
+.debug-panel {
   padding: 1rem;
   border-radius: 18px;
   background: rgba(14, 31, 45, 0.72);
@@ -92,7 +93,8 @@ code {
 
 h1,
 h2,
-p {
+p,
+summary {
   margin: 0;
 }
 
@@ -102,17 +104,16 @@ h1 {
   margin-top: 0.35rem;
 }
 
-h2 {
+h2,
+summary {
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 0.75rem;
   color: #9dc8ef;
 }
 
-.lede {
-  margin-top: 0.8rem;
-  color: #bfd8ee;
+h2 {
+  margin-bottom: 0.75rem;
 }
 
 .button-row {
@@ -139,6 +140,10 @@ h2 {
   color: #ecf4fb;
 }
 
+.compact-toggle {
+  margin-bottom: 0;
+}
+
 .toggle-field input {
   width: 1rem;
   height: 1rem;
@@ -154,6 +159,33 @@ ul {
   margin: 0;
   padding-left: 1.1rem;
   color: #bfd8ee;
+}
+
+.debug-panel {
+  padding: 0.9rem 1rem;
+}
+
+.debug-panel summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.debug-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.debug-panel summary::after {
+  content: '+';
+  float: right;
+  color: #81baf0;
+}
+
+.debug-panel[open] summary::after {
+  content: '−';
+}
+
+.debug-content {
+  margin-top: 0.85rem;
 }
 
 @media (max-width: 900px) {
