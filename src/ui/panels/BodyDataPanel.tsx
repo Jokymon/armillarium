@@ -2,7 +2,8 @@ import { Body } from 'astronomy-engine'
 import { useMemo } from 'react'
 import { getBodyReadout } from '../../astronomy/readouts'
 import { READOUT_REFERENCE_FRAME_OPTIONS, SELECTABLE_BODIES, useSimulationStore } from '../../state/simulation-store'
-import { formatDegrees, formatDistanceAu, formatHours } from '../formatters'
+import { formatDistanceAu } from '../formatters'
+import { READOUT_CONFIG } from '../readout-config'
 
 export function BodyDataPanel() {
   const currentDate = useSimulationStore((state) => state.currentDate)
@@ -19,14 +20,9 @@ export function BodyDataPanel() {
     [selectedBody, currentDate, readoutReferenceFrame],
   )
   const activeFrame = READOUT_REFERENCE_FRAME_OPTIONS.find((option) => option.value === readoutReferenceFrame)
-  const isEquatorialFrame = readoutReferenceFrame === 'geocentric-equatorial-j2000'
-  const primaryLabel = isEquatorialFrame ? 'α' : readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? 'λ' : 'l'
-  const secondaryLabel = isEquatorialFrame ? 'δ' : readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? 'β' : 'b'
-  const distanceLabel = readoutReferenceFrame === 'heliocentric-ecliptic-j2000' ? 'r' : 'Δ'
-  const formattedPrimaryValue = isEquatorialFrame
-    ? formatHours(selectedBodyReadout.primaryValue)
-    : formatDegrees(selectedBodyReadout.primaryValue)
-  const formattedSecondaryValue = formatDegrees(selectedBodyReadout.secondaryValue)
+  const readoutConfig = READOUT_CONFIG[readoutReferenceFrame]
+  const formattedPrimaryValue = readoutConfig.primaryFormatter(selectedBodyReadout.primaryValue)
+  const formattedSecondaryValue = readoutConfig.secondaryFormatter(selectedBodyReadout.secondaryValue)
   const isActiveFrameVisible =
     readoutReferenceFrame === 'heliocentric-ecliptic-j2000'
       ? showHeliocentricEcliptic
@@ -61,9 +57,9 @@ export function BodyDataPanel() {
         ))}
       </div>
       <p className="readout">Selected body: {selectedBody}</p>
-      <p className="readout">{primaryLabel}: {formattedPrimaryValue}</p>
-      <p className="readout">{secondaryLabel}: {formattedSecondaryValue}</p>
-      <p className="readout">{distanceLabel}: {formatDistanceAu(selectedBodyReadout.distanceAu)}</p>
+      <p className="readout">{readoutConfig.primaryLabel}: {formattedPrimaryValue}</p>
+      <p className="readout">{readoutConfig.secondaryLabel}: {formattedSecondaryValue}</p>
+      <p className="readout">{readoutConfig.distanceLabel}: {formatDistanceAu(selectedBodyReadout.distanceAu)}</p>
     </section>
   )
 }
