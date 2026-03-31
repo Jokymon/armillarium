@@ -1,11 +1,12 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo } from 'react'
+import { Body } from 'astronomy-engine'
 import * as THREE from 'three'
-import { getBodyPositions } from '../astronomy/positions'
+import { getBodyPositions, toSceneVector } from '../astronomy/positions'
 import { useSimulationStore } from '../state/simulation-store'
-import { Earth, Moon, Sun } from './bodies'
+import { Earth, Jupiter, Mars, Moon, Sun, Venus } from './bodies'
 import { CameraController } from './CameraController'
-import { EarthMoonLine, EarthOrbit, MoonTrack, SunEarthLine } from './guides'
+import { EarthMoonLine, EarthOrbit, JupiterOrbit, MarsOrbit, MoonTrack, SunEarthLine, VenusOrbit } from './guides'
 import { EclipticReferenceOverlay, GeocentricEquatorialOverlay } from './overlays'
 
 const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
@@ -25,6 +26,9 @@ export function SimulationScene() {
     () => getBodyPositions(currentDate, moonDistanceExaggeration),
     [currentDate, moonDistanceExaggeration],
   )
+  const venusPosition = useMemo(() => toSceneVector(Body.Venus, currentDate), [currentDate])
+  const marsPosition = useMemo(() => toSceneVector(Body.Mars, currentDate), [currentDate])
+  const jupiterPosition = useMemo(() => toSceneVector(Body.Jupiter, currentDate), [currentDate])
 
   useFrame((_, delta) => {
     tick(delta)
@@ -57,12 +61,18 @@ export function SimulationScene() {
           highlighted={readoutReferenceFrame === 'geocentric-equatorial-j2000'}
         />
       ) : null}
+      <VenusOrbit />
       <EarthOrbit />
+      <MarsOrbit />
+      <JupiterOrbit />
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
       <SunEarthLine earthPosition={earthPosition} />
       <EarthMoonLine earthPosition={earthPosition} moonPosition={moonDisplayPosition} />
       <Sun isSelected={selectedBody === 'Sun'} />
+      <Venus position={venusPosition} />
       <Earth position={earthPosition} isSelected={selectedBody === 'Earth'} />
+      <Mars position={marsPosition} />
+      <Jupiter position={jupiterPosition} />
       <Moon position={moonDisplayPosition} isSelected={selectedBody === 'Moon'} />
     </>
   )

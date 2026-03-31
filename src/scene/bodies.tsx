@@ -3,6 +3,16 @@ import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
+const EARTH_DISPLAY_RADIUS = 0.16
+const DISPLAY_RADIUS_EXPONENT = 0.35
+const MAX_PLANET_DISPLAY_RADIUS = 0.38
+const EARTH_RADIUS_KM = 6371
+
+function getPlanetDisplayRadius(physicalRadiusKm: number) {
+  const physicalRatio = physicalRadiusKm / EARTH_RADIUS_KM
+  return Math.min(EARTH_DISPLAY_RADIUS * Math.pow(physicalRatio, DISPLAY_RADIUS_EXPONENT), MAX_PLANET_DISPLAY_RADIUS)
+}
+
 function SelectionHalo({ position, radius, color }: { position: THREE.Vector3; radius: number; color: string }) {
   const haloRef = useRef<THREE.Mesh>(null)
   const ringRef = useRef<THREE.Mesh>(null)
@@ -86,6 +96,80 @@ export function Earth({ position, isSelected }: { position: THREE.Vector3; isSel
         <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
       </mesh>
     </group>
+  )
+}
+
+function Planet({
+  position,
+  radius,
+  color,
+  emissive,
+  emissiveIntensity,
+  rotationSpeed,
+}: {
+  position: THREE.Vector3
+  radius: number
+  color: string
+  emissive: string
+  emissiveIntensity: number
+  rotationSpeed: number
+}) {
+  const planetRef = useRef<THREE.Mesh>(null)
+
+  useEffect(() => {
+    planetRef.current?.position.copy(position)
+  }, [position])
+
+  useFrame((_, delta) => {
+    if (planetRef.current) {
+      planetRef.current.rotation.y += delta * rotationSpeed
+    }
+  })
+
+  return (
+    <mesh ref={planetRef}>
+      <sphereGeometry args={[radius, 28, 28]} />
+      <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={emissiveIntensity} />
+    </mesh>
+  )
+}
+
+export function Venus({ position }: { position: THREE.Vector3 }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(6051.8)}
+      color="#d6b37d"
+      emissive="#4f3320"
+      emissiveIntensity={0.14}
+      rotationSpeed={0.18}
+    />
+  )
+}
+
+export function Mars({ position }: { position: THREE.Vector3 }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(3389.5)}
+      color="#c76441"
+      emissive="#4f1e15"
+      emissiveIntensity={0.15}
+      rotationSpeed={0.4}
+    />
+  )
+}
+
+export function Jupiter({ position }: { position: THREE.Vector3 }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(69911)}
+      color="#d7ae83"
+      emissive="#5b3827"
+      emissiveIntensity={0.16}
+      rotationSpeed={0.95}
+    />
   )
 }
 
