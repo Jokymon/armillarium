@@ -11,6 +11,11 @@ export function formatDate(date: Date) {
   }).format(date)
 }
 
+export function formatJulianDate(date: Date) {
+  const julianDate = date.getTime() / 86400000 + 2440587.5
+  return julianDate.toFixed(5)
+}
+
 export function formatDegrees(value: number | null) {
   return value === null ? 'n/a' : `${value.toFixed(3)}°`
 }

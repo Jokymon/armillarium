@@ -1,4 +1,4 @@
-import { formatDate } from '../formatters'
+import { formatDate, formatJulianDate } from '../formatters'
 import { useSimulationStore } from '../../state/simulation-store'
 
 export function TimePanel() {
@@ -44,6 +44,7 @@ export function TimePanel() {
         />
       </label>
       <p className="readout">Current UTC: {formatDate(currentDate)}</p>
+      <p className="readout">Julian Date: {formatJulianDate(currentDate)}</p>
     </section>
   )
 }
