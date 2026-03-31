@@ -11,7 +11,8 @@ export type SimulationState = {
   playing: boolean
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
-  showEclipticReference: boolean
+  showHeliocentricEcliptic: boolean
+  showGeocentricEcliptic: boolean
   showGeocentricEquatorial: boolean
   moonDistanceExaggeration: number
   selectedBody: SelectableBody
@@ -20,7 +21,8 @@ export type SimulationState = {
   setPlaying: (playing: boolean) => void
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
-  setShowEclipticReference: (show: boolean) => void
+  setShowHeliocentricEcliptic: (show: boolean) => void
+  setShowGeocentricEcliptic: (show: boolean) => void
   setShowGeocentricEquatorial: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
@@ -59,7 +61,8 @@ export const useSimulationStore = create<SimulationState>((set) => {
     playing: false,
     speedDaysPerSecond: 20,
     cameraPreset: 'free',
-    showEclipticReference: true,
+    showHeliocentricEcliptic: true,
+    showGeocentricEcliptic: false,
     showGeocentricEquatorial: false,
     moonDistanceExaggeration: 14,
     selectedBody: 'Earth',
@@ -72,7 +75,8 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setPlaying: (playing) => set({ playing }),
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
-    setShowEclipticReference: (showEclipticReference) => set({ showEclipticReference }),
+    setShowHeliocentricEcliptic: (showHeliocentricEcliptic) => set({ showHeliocentricEcliptic }),
+    setShowGeocentricEcliptic: (showGeocentricEcliptic) => set({ showGeocentricEcliptic }),
     setShowGeocentricEquatorial: (showGeocentricEquatorial) => set({ showGeocentricEquatorial }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),

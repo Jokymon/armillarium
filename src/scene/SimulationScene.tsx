@@ -13,7 +13,8 @@ const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
 export function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
-  const showEclipticReference = useSimulationStore((state) => state.showEclipticReference)
+  const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
+  const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const selectedBody = useSimulationStore((state) => state.selectedBody)
@@ -24,11 +25,6 @@ export function SimulationScene() {
     () => getBodyPositions(currentDate, moonDistanceExaggeration),
     [currentDate, moonDistanceExaggeration],
   )
-  const frameOrigin = readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? earthPosition : SUN_ORIGIN
-  const frameLabel =
-    readoutReferenceFrame === 'geocentric-ecliptic-j2000'
-      ? 'Geocentric Ecliptic J2000'
-      : 'Heliocentric Ecliptic J2000'
 
   useFrame((_, delta) => {
     tick(delta)
@@ -41,7 +37,20 @@ export function SimulationScene() {
       <ambientLight intensity={0.25} />
       <pointLight position={[0, 0, 0]} intensity={900} decay={2} color="#fff1c1" />
       <CameraController preset={cameraPreset} />
-      {showEclipticReference ? <EclipticReferenceOverlay origin={frameOrigin} frameLabel={frameLabel} /> : null}
+      {showHeliocentricEcliptic ? (
+        <EclipticReferenceOverlay
+          origin={SUN_ORIGIN}
+          frameLabel="Heliocentric Ecliptic J2000"
+          highlighted={readoutReferenceFrame === 'heliocentric-ecliptic-j2000'}
+        />
+      ) : null}
+      {showGeocentricEcliptic ? (
+        <EclipticReferenceOverlay
+          origin={earthPosition}
+          frameLabel="Geocentric Ecliptic J2000"
+          highlighted={readoutReferenceFrame === 'geocentric-ecliptic-j2000'}
+        />
+      ) : null}
       {showGeocentricEquatorial ? <GeocentricEquatorialOverlay origin={earthPosition} /> : null}
       <EarthOrbit />
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />

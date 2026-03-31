@@ -5,6 +5,8 @@ import { useSimulationStore } from '../../state/simulation-store'
 export function DebugPanel() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
+  const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
+  const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
 
   const { earthPosition, moonPhysicalPosition, moonDisplayPosition } = useMemo(
@@ -30,6 +32,8 @@ export function DebugPanel() {
         </code>
         <p className="readout">Physical Earth-Moon separation: {physicalEarthMoonDistance.toFixed(3)} scene units</p>
         <p className="readout">Displayed Earth-Moon separation: {displayEarthMoonDistance.toFixed(3)} scene units</p>
+        <p className="readout">Heliocentric ecliptic overlay: {showHeliocentricEcliptic ? 'on' : 'off'}</p>
+        <p className="readout">Geocentric ecliptic overlay: {showGeocentricEcliptic ? 'on' : 'off'}</p>
         <p className="readout">Geocentric equatorial overlay: {showGeocentricEquatorial ? 'on' : 'off'}</p>
       </div>
     </details>

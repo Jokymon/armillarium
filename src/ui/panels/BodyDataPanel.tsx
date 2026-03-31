@@ -8,6 +8,8 @@ export function BodyDataPanel() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const selectedBody = useSimulationStore((state) => state.selectedBody)
   const readoutReferenceFrame = useSimulationStore((state) => state.readoutReferenceFrame)
+  const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
+  const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const setSelectedBody = useSimulationStore((state) => state.setSelectedBody)
   const setReadoutReferenceFrame = useSimulationStore((state) => state.setReadoutReferenceFrame)
 
@@ -19,6 +21,8 @@ export function BodyDataPanel() {
   const longitudeLabel = readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? 'λ' : 'l'
   const latitudeLabel = readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? 'β' : 'b'
   const distanceLabel = readoutReferenceFrame === 'geocentric-ecliptic-j2000' ? 'Δ' : 'r'
+  const isActiveFrameVisible =
+    readoutReferenceFrame === 'heliocentric-ecliptic-j2000' ? showHeliocentricEcliptic : showGeocentricEcliptic
 
   return (
     <section>
@@ -36,6 +40,7 @@ export function BodyDataPanel() {
         ))}
       </div>
       <p className="readout">Active frame: {activeFrame?.label}</p>
+      {!isActiveFrameVisible ? <p className="readout subtle-readout">The active readout frame is currently hidden in the scene.</p> : null}
       <div className="button-row">
         {SELECTABLE_BODIES.map((body) => (
           <button key={body} className={selectedBody === body ? 'active' : ''} onClick={() => setSelectedBody(body)}>

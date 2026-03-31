@@ -120,8 +120,8 @@ This document defines the first implementation target and the technology directi
 - Prime meridian and geographic reference grid
 - Celestial meridians and hour circles
 - Celestial poles
-- FR-18: The system shall allow enabling multiple overlays simultaneously.
-- FR-19: The system shall display coordinate readouts for selected bodies in at least:
+- FR-18: The system shall allow enabling multiple overlays simultaneously and independently of the currently selected body-data readout frame.
+- FR-19: The system shall provide an explicit body-data readout frame selector and display coordinates for selected bodies in that chosen frame, including at least:
 - Heliocentric Cartesian
 - Geocentric Cartesian
 - Right ascension / declination
@@ -140,9 +140,9 @@ This document defines the first implementation target and the technology directi
 - FR-24: The system shall support at least two explicit user-facing modes: Astronomy Mode and Navigation Mode.
 - FR-25: The system shall preserve the current simulation time when switching between modes.
 - FR-26: The system should preserve observer location, selected body, and other shared context when switching between modes where scientifically meaningful.
-- FR-27: The system shall provide explanatory labels for active coordinate systems and overlays.
+- FR-27: The system shall provide explanatory labels for active coordinate systems and overlays and should visually emphasize the currently active body-data readout frame when its overlay is visible.
 - FR-28: The system should include contextual descriptions for major modes such as heliocentric, geocentric, equatorial, and horizontal.
-- FR-29: The system should allow users to select a body and inspect its coordinates in the active frame.
+- FR-29: The system should allow users to select a body and inspect its coordinates in the selected body-data readout frame, and it should indicate when that frame is currently hidden in the scene.
 
 ### 5.7 Astro-navigation features
 
@@ -214,7 +214,7 @@ Responsibilities:
 Responsibilities:
 
 - Canonical scene state.
-- Selected time, observer, active frame, active overlays, scaling options.
+- Selected time, observer, selected body-data readout frame, independently controlled active overlays, scaling options.
 - Active product mode and mode-specific defaults.
 - Body descriptors and derived vectors.
 - A simplified Earth surface layer for continents and major land masses, sufficient for user orientation and location picking.
@@ -226,7 +226,7 @@ Responsibilities:
 - 3D scene graph.
 - Simplified Earth globe or map surface for rough geographic orientation and observer selection.
 - Camera presets and transitions.
-- Overlay geometry.
+- Overlay geometry, including simultaneous overlays with optional emphasis for the currently active body-data readout frame.
 - Display-only exaggeration of selected relative vectors for visibility without changing the canonical simulation state.
 - Projection lines.
 - Labels and picking.
@@ -238,8 +238,8 @@ Responsibilities:
 - Timeline and playback controls.
 - Mode switching.
 - Location picking aided by visible continents or land-mass outlines.
-- Overlay toggles.
-- Coordinate inspector.
+- Overlay toggles that are independent from body-data readout frame selection.
+- Coordinate inspector with an explicit body-data readout frame selector and a hidden-frame indication when needed.
 - Educational annotation panels.
 - Navigation-oriented explanatory readouts and mode-specific learning panels.
 - Mode-aware overlay presets, inspectors, and panel composition.
@@ -415,11 +415,11 @@ Conclusion:
 
 ## 12. Visual and Interaction Design Principles
 
-- The UI should make frame changes explicit. Users must always know what they are looking at.
+- The UI should make frame changes explicit. Users must always know what they are looking at, and body-data readout frame selection must remain distinct from overlay visibility.
 - Scale distortion must be transparent. If radii or distances are exaggerated, the user should be told.
 - Close-range systems such as Earth-Moon may use display-only relative-distance exaggeration when needed for visibility, but the UI should make that exaggeration explicit.
 - Earth land masses should be recognizable but do not need high-resolution political or coastline accuracy in v1.
-- Overlays should use a consistent visual language:
+- Overlays should use a consistent visual language, and the active body-data readout frame may be emphasized without muting other visible overlays:
 - Planes: translucent surfaces
 - Axes: thin colored lines
 - Meridians and great circles: dashed arcs

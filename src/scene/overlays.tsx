@@ -40,25 +40,41 @@ function EquatorialAxisLabels() {
   )
 }
 
-export function EclipticReferenceOverlay({ origin, frameLabel }: { origin: THREE.Vector3; frameLabel: string }) {
+export function EclipticReferenceOverlay({
+  origin,
+  frameLabel,
+  highlighted,
+}: {
+  origin: THREE.Vector3
+  frameLabel: string
+  highlighted: boolean
+}) {
   const outlinePoints = useMemo(() => {
     return Array.from({ length: 65 }, (_, index) => {
       const angle = (index / 64) * Math.PI * 2
       return new THREE.Vector3(Math.cos(angle) * ECLIPTIC_RADIUS, Math.sin(angle) * ECLIPTIC_RADIUS, 0)
     })
   }, [])
+  const planeOpacity = highlighted ? 0.1 : 0.12
+  const outlineWidth = highlighted ? 1.5 : 1
+  const axisWidth = highlighted ? 1.6 : 1.25
+  const outlineColor = highlighted ? '#90daf8' : '#64b3d5'
+  const xColor = highlighted ? '#ffb0b0' : '#ff8d8d'
+  const yColor = highlighted ? '#b6f3a8' : '#8fe388'
+  const zColor = highlighted ? '#aed2ff' : '#8cbcff'
+  const labelColor = highlighted ? '#b6e6fb' : '#8ccae6'
 
   return (
     <group position={origin.toArray()}>
       <mesh>
         <circleGeometry args={[ECLIPTIC_RADIUS, 64]} />
-        <meshBasicMaterial color="#1f5f7a" transparent opacity={0.12} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#1f5f7a" transparent opacity={planeOpacity} side={THREE.DoubleSide} />
       </mesh>
-      <Line points={outlinePoints} color="#64b3d5" lineWidth={1} />
-      <Line points={[[-AXIS_LENGTH, 0, 0], [AXIS_LENGTH, 0, 0]]} color="#ff8d8d" lineWidth={1.25} />
-      <Line points={[[0, -AXIS_LENGTH, 0], [0, AXIS_LENGTH, 0]]} color="#8fe388" lineWidth={1.25} />
-      <Line points={[[0, 0, -AXIS_LENGTH], [0, 0, AXIS_LENGTH]]} color="#8cbcff" lineWidth={1.25} />
-      <Text position={[6.2, -6.2, 0]} fontSize={0.34} color="#8ccae6">
+      <Line points={outlinePoints} color={outlineColor} lineWidth={outlineWidth} />
+      <Line points={[[-AXIS_LENGTH, 0, 0], [AXIS_LENGTH, 0, 0]]} color={xColor} lineWidth={axisWidth} />
+      <Line points={[[0, -AXIS_LENGTH, 0], [0, AXIS_LENGTH, 0]]} color={yColor} lineWidth={axisWidth} />
+      <Line points={[[0, 0, -AXIS_LENGTH], [0, 0, AXIS_LENGTH]]} color={zColor} lineWidth={axisWidth} />
+      <Text position={[6.2, -6.2, 0]} fontSize={0.34} color={labelColor}>
         {frameLabel}
       </Text>
       <AxisLabels />
