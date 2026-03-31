@@ -17,10 +17,10 @@ This repository currently contains:
 - a basic interactive 3D prototype in `src/`
 - reversible time controls for a simple Sun/Earth/Moon scene
 - free-camera and top-view presets
-- a toggle for the active ecliptic reference-frame overlay
+- independent overlay toggles for heliocentric ecliptic, geocentric ecliptic, and geocentric equatorial J2000 frames
 - a canonical heliocentric internal frame where the renderer `X-Y` plane is the ecliptic plane
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth
-- a body selector with heliocentric or geocentric ecliptic readout in AU
+- a body selector with independent heliocentric ecliptic, geocentric ecliptic, or geocentric equatorial body-data readout in AU
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 
@@ -96,7 +96,8 @@ docs/
 - The body-data panel reports physical ecliptic coordinates in AU.
 - Heliocentric ecliptic readouts use `l`, `b`, and `r`.
 - Geocentric ecliptic readouts use `λ`, `β`, and `Δ`.
-- The active ecliptic overlay uses the same axis orientation in both frames and only changes origin.
+- Geocentric equatorial readouts use `α`, `δ`, and `Δ`.
+- Heliocentric and geocentric ecliptic overlays can be shown independently while the body-data readout frame is selected separately.
 - `+X` points toward the J2000 vernal equinox.
 - `+Z` points toward the north ecliptic pole.
 - `+Y` is 90° counterclockwise from `+X` when viewed from ecliptic north.
@@ -108,6 +109,6 @@ docs/
 ## Next Likely Steps
 
 - add equatorial readout frames and overlays
-- add more coordinate-system guides and overlays
+- add more coordinate-system guides, overlays, and readout-frame options
 - start Earth-surface observer views
 - introduce the first Astronomy Mode vs. Navigation Mode UI distinctions

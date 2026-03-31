@@ -1,43 +1,73 @@
-import { Body } from 'astronomy-engine'
+import { AstroTime, Body, RotateVector, Rotation_ECL_EQJ, Vector } from 'astronomy-engine'
 import * as THREE from 'three'
 import type { ReadoutReferenceFrame } from '../state/simulation-store'
 import { toEclipticVectorAu } from './coordinates'
 
-export type EclipticReadout = {
-  longitudeDeg: number | null
-  latitudeDeg: number | null
+export type BodyReadout = {
+  primaryValue: number | null
+  secondaryValue: number | null
   distanceAu: number
 }
 
-export function getEclipticVectorAuInFrame(body: Body, date: Date, frame: ReadoutReferenceFrame) {
+const ECL_TO_EQJ = Rotation_ECL_EQJ()
+
+function getGeocentricEclipticVectorAu(body: Body, date: Date) {
   const bodyVector = toEclipticVectorAu(body, date)
-
-  if (frame === 'heliocentric-ecliptic-j2000') {
-    return bodyVector
-  }
-
   const earthVector = toEclipticVectorAu(Body.Earth, date)
   return bodyVector.sub(earthVector)
 }
 
-export function getEclipticReadout(body: Body, date: Date, frame: ReadoutReferenceFrame): EclipticReadout {
-  const vector = getEclipticVectorAuInFrame(body, date, frame)
+function getReadoutVectorAu(body: Body, date: Date, frame: ReadoutReferenceFrame) {
+  if (frame === 'heliocentric-ecliptic-j2000') {
+    return toEclipticVectorAu(body, date)
+  }
+
+  const geocentricEclipticVector = getGeocentricEclipticVectorAu(body, date)
+
+  if (frame === 'geocentric-equatorial-j2000') {
+    const epoch = new AstroTime(0)
+    const eqjVector = RotateVector(
+      ECL_TO_EQJ,
+      new Vector(geocentricEclipticVector.x, geocentricEclipticVector.y, geocentricEclipticVector.z, epoch),
+    )
+    return new THREE.Vector3(eqjVector.x, eqjVector.y, eqjVector.z)
+  }
+
+  return geocentricEclipticVector
+}
+
+export function getBodyReadout(body: Body, date: Date, frame: ReadoutReferenceFrame): BodyReadout {
+  const vector = getReadoutVectorAu(body, date, frame)
   const distanceAu = vector.length()
 
   if (distanceAu === 0) {
     return {
-      longitudeDeg: null,
-      latitudeDeg: null,
+      primaryValue: null,
+      secondaryValue: null,
       distanceAu: 0,
     }
   }
 
-  const longitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.y, vector.x))
+  if (frame === 'geocentric-equatorial-j2000') {
+    const rightAscensionHours = THREE.MathUtils.euclideanModulo(
+      THREE.MathUtils.radToDeg(Math.atan2(vector.y, vector.x)) / 15,
+      24,
+    )
+    const declinationDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.z, Math.hypot(vector.x, vector.y)))
+
+    return {
+      primaryValue: rightAscensionHours,
+      secondaryValue: declinationDeg,
+      distanceAu,
+    }
+  }
+
+  const longitudeDeg = THREE.MathUtils.euclideanModulo(THREE.MathUtils.radToDeg(Math.atan2(vector.y, vector.x)), 360)
   const latitudeDeg = THREE.MathUtils.radToDeg(Math.atan2(vector.z, Math.hypot(vector.x, vector.y)))
 
   return {
-    longitudeDeg: THREE.MathUtils.euclideanModulo(longitudeDeg, 360),
-    latitudeDeg,
+    primaryValue: longitudeDeg,
+    secondaryValue: latitudeDeg,
     distanceAu,
   }
 }

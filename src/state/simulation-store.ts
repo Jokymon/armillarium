@@ -2,7 +2,10 @@ import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
 export type SelectableBody = 'Sun' | 'Earth' | 'Moon'
-export type ReadoutReferenceFrame = 'heliocentric-ecliptic-j2000' | 'geocentric-ecliptic-j2000'
+export type ReadoutReferenceFrame =
+  | 'heliocentric-ecliptic-j2000'
+  | 'geocentric-ecliptic-j2000'
+  | 'geocentric-equatorial-j2000'
 
 export type SimulationState = {
   baseDate: Date
@@ -46,8 +49,13 @@ export const READOUT_REFERENCE_FRAME_OPTIONS: Array<{
   },
   {
     value: 'geocentric-ecliptic-j2000',
-    shortLabel: 'Geocentric',
+    shortLabel: 'Geo Ecliptic',
     label: 'Geocentric Ecliptic J2000',
+  },
+  {
+    value: 'geocentric-equatorial-j2000',
+    shortLabel: 'Geo Equatorial',
+    label: 'Geocentric Equatorial J2000',
   },
 ]
 

@@ -82,7 +82,13 @@ export function EclipticReferenceOverlay({
   )
 }
 
-export function GeocentricEquatorialOverlay({ origin }: { origin: THREE.Vector3 }) {
+export function GeocentricEquatorialOverlay({
+  origin,
+  highlighted,
+}: {
+  origin: THREE.Vector3
+  highlighted: boolean
+}) {
   const orientation = useMemo(() => {
     const xAxis = new THREE.Vector3(1, 0, 0)
     const epoch = new AstroTime(0)
@@ -101,18 +107,26 @@ export function GeocentricEquatorialOverlay({ origin }: { origin: THREE.Vector3 
       return new THREE.Vector3(Math.cos(angle) * EQUATORIAL_RADIUS, Math.sin(angle) * EQUATORIAL_RADIUS, 0)
     })
   }, [])
+  const planeOpacity = highlighted ? 0.14 : 0.16
+  const outlineWidth = highlighted ? 1.5 : 1
+  const axisWidth = highlighted ? 1.45 : 1.15
+  const outlineColor = highlighted ? '#ffbc93' : '#f09a6c'
+  const xColor = highlighted ? '#ffd0b1' : '#ffb486'
+  const yColor = highlighted ? '#ffe59b' : '#ffd37a'
+  const zColor = highlighted ? '#ffb49f' : '#ff9f80'
+  const labelColor = highlighted ? '#ffd1b5' : '#f6b18b'
 
   return (
     <group position={origin.toArray()} quaternion={orientation}>
       <mesh>
         <circleGeometry args={[EQUATORIAL_RADIUS, 64]} />
-        <meshBasicMaterial color="#7d3f2a" transparent opacity={0.16} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#7d3f2a" transparent opacity={planeOpacity} side={THREE.DoubleSide} />
       </mesh>
-      <Line points={outlinePoints} color="#f09a6c" lineWidth={1} />
-      <Line points={[[-AXIS_LENGTH, 0, 0], [AXIS_LENGTH, 0, 0]]} color="#ffb486" lineWidth={1.15} />
-      <Line points={[[0, -AXIS_LENGTH, 0], [0, AXIS_LENGTH, 0]]} color="#ffd37a" lineWidth={1.15} />
-      <Line points={[[0, 0, -AXIS_LENGTH], [0, 0, AXIS_LENGTH]]} color="#ff9f80" lineWidth={1.15} />
-      <Text position={[4.6, -4.8, 0]} fontSize={0.3} color="#f6b18b">
+      <Line points={outlinePoints} color={outlineColor} lineWidth={outlineWidth} />
+      <Line points={[[-AXIS_LENGTH, 0, 0], [AXIS_LENGTH, 0, 0]]} color={xColor} lineWidth={axisWidth} />
+      <Line points={[[0, -AXIS_LENGTH, 0], [0, AXIS_LENGTH, 0]]} color={yColor} lineWidth={axisWidth} />
+      <Line points={[[0, 0, -AXIS_LENGTH], [0, 0, AXIS_LENGTH]]} color={zColor} lineWidth={axisWidth} />
+      <Text position={[4.6, -4.8, 0]} fontSize={0.3} color={labelColor}>
         Geocentric Equatorial J2000
       </Text>
       <EquatorialAxisLabels />

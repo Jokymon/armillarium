@@ -127,31 +127,36 @@ This document defines the first implementation target and the technology directi
 - Right ascension / declination
 - Altitude / azimuth for Earth observer mode
 - Ecliptic longitude / latitude
+- FR-20: The system shall support astronomy-oriented geocentric equatorial J2000 body-data readouts using right ascension `α`, declination `δ`, and distance `Δ`, distinct from later navigation-oriented hour-angle workflows.
+- FR-20a: The system shall use the following astronomy-oriented symbol conventions for the currently implemented body-data frames:
+- Heliocentric ecliptic: `l`, `b`, `r`.
+- Geocentric ecliptic: `λ`, `β`, `Δ`.
+- Geocentric equatorial: `α`, `δ`, `Δ`.
 
 ### 5.5 Projection and tracing features
 
-- FR-20: The system shall support drawing vector lines between bodies.
-- FR-21: The system shall support projecting the direction of the Sun, Moon, and planets onto the Earth.
-- FR-22: The system should support subsolar and sublunar point display in the first release.
-- FR-23: The system should be designed so star projection can be added later without reworking the architecture.
+- FR-21: The system shall support drawing vector lines between bodies.
+- FR-22: The system shall support projecting the direction of the Sun, Moon, and planets onto the Earth.
+- FR-23: The system should support subsolar and sublunar point display in the first release.
+- FR-24: The system should be designed so star projection can be added later without reworking the architecture.
 
 ### 5.6 UI and education support
 
-- FR-24: The system shall support at least two explicit user-facing modes: Astronomy Mode and Navigation Mode.
-- FR-25: The system shall preserve the current simulation time when switching between modes.
-- FR-26: The system should preserve observer location, selected body, and other shared context when switching between modes where scientifically meaningful.
-- FR-27: The system shall provide explanatory labels for active coordinate systems and overlays and should visually emphasize the currently active body-data readout frame when its overlay is visible.
-- FR-28: The system should include contextual descriptions for major modes such as heliocentric, geocentric, equatorial, and horizontal.
-- FR-29: The system should allow users to select a body and inspect its coordinates in the selected body-data readout frame, and it should indicate when that frame is currently hidden in the scene.
+- FR-25: The system shall support at least two explicit user-facing modes: Astronomy Mode and Navigation Mode.
+- FR-26: The system shall preserve the current simulation time when switching between modes.
+- FR-27: The system should preserve observer location, selected body, and other shared context when switching between modes where scientifically meaningful.
+- FR-28: The system shall provide explanatory labels for active coordinate systems and overlays and should visually emphasize the currently active body-data readout frame when its overlay is visible.
+- FR-29: The system should include contextual descriptions for major modes such as heliocentric, geocentric, equatorial, and horizontal.
+- FR-30: The system should allow users to select a body and inspect its coordinates in the selected body-data readout frame, and it should indicate when that frame is currently hidden in the scene.
 
 ### 5.7 Astro-navigation features
 
-- FR-30: The system shall support a Navigation Mode centered on Earth-surface observation.
-- FR-31: The system shall display navigational readouts for selected bodies using the explicit terms GHA, LHA, and SHA, together with declination and observed altitude where applicable.
-- FR-32: The system shall provide overlays for the celestial sphere, celestial poles, local zenith, local meridian, and hour circles in Navigation Mode.
-- FR-33: The system should support showing the navigational triangle conceptually through highlighted relationships between zenith, celestial pole, and selected body.
-- FR-34: The system should support demonstration of meridian transit and explain its significance for navigation.
-- FR-35: The system should be structured so sextant-style angle measurement tools can be added later without major architectural changes.
+- FR-31: The system shall support a Navigation Mode centered on Earth-surface observation.
+- FR-32: The system shall display navigational readouts for selected bodies using the explicit terms GHA, LHA, and SHA, together with declination and observed altitude where applicable.
+- FR-33: The system shall provide overlays for the celestial sphere, celestial poles, local zenith, local meridian, and hour circles in Navigation Mode.
+- FR-34: The system should support showing the navigational triangle conceptually through highlighted relationships between zenith, celestial pole, and selected body.
+- FR-35: The system should support demonstration of meridian transit and explain its significance for navigation.
+- FR-36: The system should be structured so sextant-style angle measurement tools can be added later without major architectural changes.
 
 ## 6. Scientific and Accuracy Requirements
 
@@ -165,6 +170,7 @@ This document defines the first implementation target and the technology directi
 - SR-8: The definitions and calculations of GHA, LHA, and SHA shall be consistent with standard celestial-navigation convention and clearly associated with the selected body and time.
 - SR-9: Mode switching shall not alter the underlying astronomical state; it shall only change presentation, defaults, and mode-specific tools.
 - SR-10: Display-only exaggeration controls shall alter visualization only; they shall not modify the canonical astronomical positions used by calculations, transforms, or future readouts.
+- SR-11: Astronomy-oriented geocentric equatorial readouts shall use right ascension and declination conventions distinct from later navigation-oriented hour-angle conventions, even when derived from the same canonical vectors.
 
 Recommended release-1 tolerance target:
 

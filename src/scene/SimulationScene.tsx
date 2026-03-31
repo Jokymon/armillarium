@@ -51,7 +51,12 @@ export function SimulationScene() {
           highlighted={readoutReferenceFrame === 'geocentric-ecliptic-j2000'}
         />
       ) : null}
-      {showGeocentricEquatorial ? <GeocentricEquatorialOverlay origin={earthPosition} /> : null}
+      {showGeocentricEquatorial ? (
+        <GeocentricEquatorialOverlay
+          origin={earthPosition}
+          highlighted={readoutReferenceFrame === 'geocentric-equatorial-j2000'}
+        />
+      ) : null}
       <EarthOrbit />
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
       <SunEarthLine earthPosition={earthPosition} />

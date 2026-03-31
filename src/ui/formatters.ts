@@ -15,6 +15,10 @@ export function formatDegrees(value: number | null) {
   return value === null ? 'n/a' : `${value.toFixed(3)}°`
 }
 
+export function formatHours(value: number | null) {
+  return value === null ? 'n/a' : `${value.toFixed(3)}h`
+}
+
 export function formatDistanceAu(value: number) {
   return `${value.toFixed(6)} AU`
 }
