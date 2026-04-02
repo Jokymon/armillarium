@@ -103,6 +103,7 @@ This document defines the first implementation target and the technology directi
 - FR-12: The system shall support Earth-centered orbital space view.
 - FR-13: The system shall support Earth-surface observer view using latitude, longitude, elevation, and time, with rough Earth surface context for orientation.
 - FR-14: The system shall provide a simplified Earth globe or map view with visible major land masses to help users choose and recognize observer locations.
+- FR-14a: The simplified Earth globe shall support a geographic latitude/longitude grid and rough continent outlines whose orientation rotates consistently with the simulated Earth over time.
 - FR-15: The system should support saved viewpoints and quick-reset camera presets.
 
 ### 5.4 Coordinate systems and overlays
@@ -171,6 +172,7 @@ This document defines the first implementation target and the technology directi
 - SR-9: Mode switching shall not alter the underlying astronomical state; it shall only change presentation, defaults, and mode-specific tools.
 - SR-10: Display-only exaggeration controls shall alter visualization only; they shall not modify the canonical astronomical positions used by calculations, transforms, or future readouts.
 - SR-11: Astronomy-oriented geocentric equatorial readouts shall use right ascension and declination conventions distinct from later navigation-oriented hour-angle conventions, even when derived from the same canonical vectors.
+- SR-12: Any rendered Earth surface orientation, including prime meridian and continent placement, shall remain approximately consistent with the simulated Earth rotation state for the displayed time.
 
 Recommended release-1 tolerance target:
 
@@ -233,6 +235,7 @@ Responsibilities:
 - Simplified Earth globe or map surface for rough geographic orientation and observer selection.
 - Camera presets and transitions.
 - Overlay geometry, including simultaneous overlays with optional emphasis for the currently active body-data readout frame.
+- Distance-aware Earth surface detail that can recede automatically when the camera is far from Earth.
 - Display-only exaggeration of selected relative vectors for visibility without changing the canonical simulation state.
 - Projection lines.
 - Labels and picking.
@@ -426,6 +429,7 @@ Conclusion:
 - Scale distortion must be transparent. If radii or distances are exaggerated, the user should be told.
 - Close-range systems such as Earth-Moon may use display-only relative-distance exaggeration when needed for visibility, but the UI should make that exaggeration explicit.
 - Earth land masses should be recognizable but do not need high-resolution political or coastline accuracy in v1.
+- Close-up Earth surface detail such as geographic grids and rough continent outlines may be hidden automatically at large camera distances to reduce scene clutter.
 - Overlays should use a consistent visual language, and the active body-data readout frame may be emphasized without muting other visible overlays:
 - Planes: translucent surfaces
 - Axes: thin colored lines

@@ -2,6 +2,8 @@ import { Text } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { getEarthSurfaceQuaternion } from '../astronomy/earth'
+import { EarthSurface } from './earth-surface'
 
 const EARTH_DISPLAY_RADIUS = 0.16
 const DISPLAY_RADIUS_EXPONENT = 0.35
@@ -75,26 +77,35 @@ export function Sun({ isSelected }: { isSelected: boolean }) {
   )
 }
 
-export function Earth({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
-  const earthRef = useRef<THREE.Mesh>(null)
+export function Earth({
+  position,
+  date,
+  isSelected,
+}: {
+  position: THREE.Vector3
+  date: Date
+  isSelected: boolean
+}) {
+  const earthGroupRef = useRef<THREE.Group>(null)
+  const surfaceQuaternion = getEarthSurfaceQuaternion(date)
 
   useEffect(() => {
-    earthRef.current?.position.copy(position)
-  }, [position])
-
-  useFrame((_, delta) => {
-    if (earthRef.current) {
-      earthRef.current.rotation.y += delta * 0.8
+    if (earthGroupRef.current) {
+      earthGroupRef.current.position.copy(position)
+      earthGroupRef.current.quaternion.copy(surfaceQuaternion)
     }
-  })
+  }, [position, surfaceQuaternion])
 
   return (
     <group>
       {isSelected ? <SelectionHalo position={position} radius={0.23} color="#8dd3ff" /> : null}
-      <mesh ref={earthRef}>
-        <sphereGeometry args={[0.16, 32, 32]} />
-        <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
-      </mesh>
+      <group ref={earthGroupRef}>
+        <mesh>
+          <sphereGeometry args={[EARTH_DISPLAY_RADIUS, 32, 32]} />
+          <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
+        </mesh>
+        <EarthSurface earthPosition={position} radius={EARTH_DISPLAY_RADIUS} />
+      </group>
     </group>
   )
 }
