@@ -251,6 +251,9 @@ export function EarthSurface({
   radius: number
 }) {
   const detailGroupRef = useRef<THREE.Group>(null)
+  const lineProps = {
+    toneMapped: false,
+  } as const
 
   const meridians = useMemo(
     () =>
@@ -314,39 +317,47 @@ export function EarthSurface({
         <Line
           key={`meridian-${index}`}
           points={points}
-          color="#90b6d3"
+          color="#567f97"
           lineWidth={0.55}
           transparent
           opacity={0.42}
+          {...lineProps}
         />
       ))}
       {parallels.map((points, index) => (
         <Line
           key={`parallel-${index}`}
           points={points}
-          color="#90b6d3"
+          color="#567f97"
           lineWidth={0.55}
           transparent
           opacity={0.38}
+          {...lineProps}
         />
       ))}
-      <Line points={equator} color="#f6d179" lineWidth={1.15} transparent opacity={0.82} />
+      <Line points={equator} color="#765721" lineWidth={1.9} transparent opacity={0.66} {...lineProps} />
+      <Line points={equator} color="#d8b15f" lineWidth={1.1} transparent opacity={0.9} {...lineProps} />
       <Line
         points={primeMeridian}
-        color="#ffdba4"
+        color="#7d5924"
+        lineWidth={1.95}
+        transparent
+        opacity={0.68}
+        {...lineProps}
+      />
+      <Line
+        points={primeMeridian}
+        color="#e3ba74"
         lineWidth={1.15}
         transparent
-        opacity={0.84}
+        opacity={0.92}
+        {...lineProps}
       />
       {continents.map((points, index) => (
-        <Line
-          key={`continent-${index}`}
-          points={points}
-          color="#e5c8f0"
-          lineWidth={1}
-          transparent
-          opacity={0.88}
-        />
+        <group key={`continent-${index}`}>
+          <Line points={points} color="#314530" lineWidth={1.75} transparent opacity={0.62} {...lineProps} />
+          <Line points={points} color="#7ea17a" lineWidth={0.95} transparent opacity={0.92} {...lineProps} />
+        </group>
       ))}
     </group>
   )

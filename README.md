@@ -104,6 +104,7 @@ docs/
 - The sampled Earth orbit and Moon track are rendered in the same internal Ecliptic J2000 frame.
 - The displayed Moon uses a visualization-only Earth-Moon distance exaggeration; the underlying ephemeris is unchanged.
 - Planet sizes and some displayed distances are visually exaggerated for usability.
+- Earth surface grid and continent outlines are simplified and become visible only when the camera is sufficiently close to Earth.
 - The current build is a prototype baseline, not yet optimized for bundle size.
 
 ## Next Likely Steps
