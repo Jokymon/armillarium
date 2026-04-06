@@ -6,7 +6,7 @@ import { getBodyPositions, toSceneVector } from '../astronomy/positions'
 import { useSimulationStore } from '../state/simulation-store'
 import { Earth, Jupiter, Mars, Moon, Sun, Venus } from './bodies'
 import { CameraController } from './CameraController'
-import { EarthMoonLine, EarthOrbit, JupiterOrbit, MarsOrbit, MoonTrack, SunEarthLine, VenusOrbit } from './guides'
+import { EarthOrbit, JupiterOrbit, MarsOrbit, MoonTrack, SelectedReferenceVector, VenusOrbit } from './guides'
 import { EclipticReferenceOverlay, GeocentricEquatorialOverlay } from './overlays'
 
 const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
@@ -29,6 +29,23 @@ export function SimulationScene() {
   const venusPosition = useMemo(() => toSceneVector(Body.Venus, currentDate), [currentDate])
   const marsPosition = useMemo(() => toSceneVector(Body.Mars, currentDate), [currentDate])
   const jupiterPosition = useMemo(() => toSceneVector(Body.Jupiter, currentDate), [currentDate])
+  const selectedBodyPosition = useMemo(() => {
+    switch (selectedBody) {
+      case 'Sun':
+        return SUN_ORIGIN
+      case 'Venus':
+        return venusPosition
+      case 'Earth':
+        return earthPosition
+      case 'Mars':
+        return marsPosition
+      case 'Jupiter':
+        return jupiterPosition
+      case 'Moon':
+        return moonDisplayPosition
+    }
+  }, [earthPosition, jupiterPosition, marsPosition, moonDisplayPosition, selectedBody, venusPosition])
+  const selectedFrameOrigin = readoutReferenceFrame === 'heliocentric-ecliptic-j2000' ? SUN_ORIGIN : earthPosition
 
   useFrame((_, delta) => {
     tick(delta)
@@ -66,8 +83,7 @@ export function SimulationScene() {
       <MarsOrbit />
       <JupiterOrbit />
       <MoonTrack date={currentDate} moonDistanceExaggeration={moonDistanceExaggeration} />
-      <SunEarthLine earthPosition={earthPosition} />
-      <EarthMoonLine earthPosition={earthPosition} moonPosition={moonDisplayPosition} />
+      <SelectedReferenceVector origin={selectedFrameOrigin} target={selectedBodyPosition} />
       <Sun isSelected={selectedBody === 'Sun'} />
       <Venus position={venusPosition} isSelected={selectedBody === 'Venus'} />
       <Earth position={earthPosition} date={currentDate} isSelected={selectedBody === 'Earth'} />

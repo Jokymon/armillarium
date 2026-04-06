@@ -136,7 +136,7 @@ This document defines the first implementation target and the technology directi
 
 ### 5.5 Projection and tracing features
 
-- FR-21: The system shall support drawing vector lines between bodies.
+- FR-21: The system shall support drawing vector lines between bodies, including a visual vector from the active body-data readout frame origin to the currently selected body.
 - FR-22: The system shall support projecting the direction of the Sun, Moon, and planets onto the Earth.
 - FR-23: The system should support subsolar and sublunar point display in the first release.
 - FR-24: The system should be designed so star projection can be added later without reworking the architecture.

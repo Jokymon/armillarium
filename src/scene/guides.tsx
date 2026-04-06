@@ -53,12 +53,19 @@ export function MoonTrack({ date, moonDistanceExaggeration }: { date: Date; moon
   return <Line points={points} color="#c4d2ea" lineWidth={0.9} transparent opacity={0.8} />
 }
 
-export function SunEarthLine({ earthPosition }: { earthPosition: THREE.Vector3 }) {
-  const points = useMemo(() => [new THREE.Vector3(0, 0, 0), earthPosition], [earthPosition])
-  return <Line points={points} color="#88bdf0" lineWidth={1} />
-}
+export function SelectedReferenceVector({
+  origin,
+  target,
+}: {
+  origin: THREE.Vector3
+  target: THREE.Vector3
+}) {
+  const points = useMemo(() => [origin, target], [origin, target])
+  const isVisible = origin.distanceToSquared(target) > 0.000001
 
-export function EarthMoonLine({ earthPosition, moonPosition }: { earthPosition: THREE.Vector3; moonPosition: THREE.Vector3 }) {
-  const points = useMemo(() => [earthPosition, moonPosition], [earthPosition, moonPosition])
-  return <Line points={points} color="#d8deea" lineWidth={1.1} transparent opacity={0.95} />
+  if (!isVisible) {
+    return null
+  }
+
+  return <Line points={points} color="#d8deea" lineWidth={1.15} transparent opacity={0.95} />
 }
