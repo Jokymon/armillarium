@@ -149,6 +149,7 @@ This document defines the first implementation target and the technology directi
 - FR-28: The system shall provide explanatory labels for active coordinate systems and overlays and should visually emphasize the currently active body-data readout frame when its overlay is visible.
 - FR-29: The system should include contextual descriptions for major modes such as heliocentric, geocentric, equatorial, and horizontal.
 - FR-30: The system should allow users to select a body and inspect its coordinates in the selected body-data readout frame, and it should indicate when that frame is currently hidden in the scene.
+- FR-30a: The system shall provide readable labels for rendered celestial bodies; these labels should face the camera, remain close to the body, keep a usable apparent size across camera distances, and remain visible above reference-plane overlays.
 
 ### 5.7 Astro-navigation features
 

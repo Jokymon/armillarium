@@ -9,10 +9,76 @@ const EARTH_DISPLAY_RADIUS = 0.16
 const DISPLAY_RADIUS_EXPONENT = 0.35
 const MAX_PLANET_DISPLAY_RADIUS = 0.38
 const EARTH_RADIUS_KM = 6371
+const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
 
 function getPlanetDisplayRadius(physicalRadiusKm: number) {
   const physicalRatio = physicalRadiusKm / EARTH_RADIUS_KM
   return Math.min(EARTH_DISPLAY_RADIUS * Math.pow(physicalRatio, DISPLAY_RADIUS_EXPONENT), MAX_PLANET_DISPLAY_RADIUS)
+}
+
+function BodyLabel({
+  position,
+  radius,
+  label,
+  color = '#dce4f2',
+}: {
+  position: THREE.Vector3
+  radius: number
+  label: string
+  color?: string
+}) {
+  const labelRef = useRef<THREE.Group>(null)
+
+  function applyOverlayTextMaterial(textMesh: THREE.Mesh) {
+    textMesh.renderOrder = 1200
+    const materials = Array.isArray(textMesh.material) ? textMesh.material : [textMesh.material]
+
+    materials.forEach((material) => {
+      material.depthTest = false
+      material.depthWrite = false
+      material.toneMapped = false
+      material.needsUpdate = true
+    })
+  }
+
+  useFrame(({ camera }) => {
+    if (!labelRef.current) {
+      return
+    }
+
+    const distance = camera.position.distanceTo(position)
+    const labelScale = THREE.MathUtils.clamp(distance * 0.018, 0.12, 0.72)
+    const cameraRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion)
+    const cameraUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion)
+    const labelPosition = position
+      .clone()
+      .add(cameraRight.multiplyScalar(radius + labelScale * 1.05))
+      .add(cameraUp.multiplyScalar(radius + labelScale * 0.4))
+
+    labelRef.current.position.copy(labelPosition)
+    labelRef.current.quaternion.copy(camera.quaternion)
+    labelRef.current.scale.setScalar(labelScale)
+  })
+
+  return (
+    <group ref={labelRef} renderOrder={900}>
+      <Text
+        renderOrder={1200}
+        fontSize={1}
+        color={color}
+        anchorX="left"
+        anchorY="middle"
+        outlineWidth={0.045}
+        outlineColor="#06111b"
+        material-depthTest={false}
+        material-depthWrite={false}
+        material-toneMapped={false}
+        onSync={applyOverlayTextMaterial}
+      >
+        {label}
+      </Text>
+    </group>
+  )
 }
 
 function SelectionHalo({ position, radius, color }: { position: THREE.Vector3; radius: number; color: string }) {
@@ -68,11 +134,12 @@ function SelectionHalo({ position, radius, color }: { position: THREE.Vector3; r
 export function Sun({ isSelected }: { isSelected: boolean }) {
   return (
     <group>
-      {isSelected ? <SelectionHalo position={new THREE.Vector3(0, 0, 0)} radius={0.62} color="#ffe27b" /> : null}
+      {isSelected ? <SelectionHalo position={SUN_ORIGIN} radius={0.62} color="#ffe27b" /> : null}
       <mesh>
         <sphereGeometry args={[0.45, 32, 32]} />
         <meshBasicMaterial color="#f7c651" />
       </mesh>
+      <BodyLabel position={SUN_ORIGIN} radius={0.45} label="Sun" color="#ffe27b" />
     </group>
   )
 }
@@ -106,6 +173,7 @@ export function Earth({
         </mesh>
         <EarthSurface earthPosition={position} radius={EARTH_DISPLAY_RADIUS} />
       </group>
+      <BodyLabel position={position} radius={EARTH_DISPLAY_RADIUS} label="Earth" color="#8dd3ff" />
     </group>
   )
 }
@@ -119,6 +187,7 @@ function Planet({
   rotationSpeed,
   isSelected,
   haloColor,
+  label,
 }: {
   position: THREE.Vector3
   radius: number
@@ -128,6 +197,7 @@ function Planet({
   rotationSpeed: number
   isSelected: boolean
   haloColor: string
+  label: string
 }) {
   const planetRef = useRef<THREE.Mesh>(null)
 
@@ -148,6 +218,7 @@ function Planet({
         <sphereGeometry args={[radius, 28, 28]} />
         <meshStandardMaterial color={color} emissive={emissive} emissiveIntensity={emissiveIntensity} />
       </mesh>
+      <BodyLabel position={position} radius={radius} label={label} color={haloColor} />
     </group>
   )
 }
@@ -163,6 +234,7 @@ export function Venus({ position, isSelected }: { position: THREE.Vector3; isSel
       rotationSpeed={0.18}
       isSelected={isSelected}
       haloColor="#efd0a0"
+      label="Venus"
     />
   )
 }
@@ -178,6 +250,7 @@ export function Mars({ position, isSelected }: { position: THREE.Vector3; isSele
       rotationSpeed={0.4}
       isSelected={isSelected}
       haloColor="#f19976"
+      label="Mars"
     />
   )
 }
@@ -193,6 +266,7 @@ export function Jupiter({ position, isSelected }: { position: THREE.Vector3; isS
       rotationSpeed={0.95}
       isSelected={isSelected}
       haloColor="#f0c7a1"
+      label="Jupiter"
     />
   )
 }
@@ -217,9 +291,7 @@ export function Moon({ position, isSelected }: { position: THREE.Vector3; isSele
         <sphereGeometry args={[0.055, 24, 24]} />
         <meshStandardMaterial color="#d9dde6" emissive="#343740" emissiveIntensity={0.12} />
       </mesh>
-      <Text position={[position.x + 0.18, position.y + 0.12, position.z + 0.06]} fontSize={0.22} color="#dce4f2">
-        Moon
-      </Text>
+      <BodyLabel position={position} radius={0.055} label="Moon" />
     </group>
   )
 }
