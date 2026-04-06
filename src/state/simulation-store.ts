@@ -1,7 +1,17 @@
 import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
-export type SelectableBody = 'Sun' | 'Venus' | 'Earth' | 'Mars' | 'Jupiter' | 'Moon'
+export type SelectableBody =
+  | 'Sun'
+  | 'Mercury'
+  | 'Venus'
+  | 'Earth'
+  | 'Mars'
+  | 'Jupiter'
+  | 'Saturn'
+  | 'Uranus'
+  | 'Neptune'
+  | 'Moon'
 export type ReadoutReferenceFrame =
   | 'heliocentric-ecliptic-j2000'
   | 'geocentric-ecliptic-j2000'
@@ -38,7 +48,18 @@ export type SimulationState = {
 }
 
 export const MS_PER_DAY = 24 * 60 * 60 * 1000
-export const SELECTABLE_BODIES: SelectableBody[] = ['Sun', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Moon']
+export const SELECTABLE_BODIES: SelectableBody[] = [
+  'Sun',
+  'Mercury',
+  'Venus',
+  'Earth',
+  'Mars',
+  'Jupiter',
+  'Saturn',
+  'Uranus',
+  'Neptune',
+  'Moon',
+]
 export const STEP_INCREMENT_OPTIONS = [
   { days: 1 / 24, label: '1h' },
   { days: 6 / 24, label: '6h' },

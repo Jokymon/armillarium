@@ -7,7 +7,7 @@ The current implementation is a first vertical slice:
 - React + TypeScript + Vite frontend
 - Three.js rendering via React Three Fiber
 - Astronomy Engine for real heliocentric body positions
-- Minimal Sun/Earth/Moon scene with time controls, camera presets, and ecliptic reference-frame overlays
+- Solar System scene with Sun, Moon, and planets from Mercury through Neptune, plus time controls, camera presets, and reference-frame overlays
 
 ## Current Scope
 
@@ -21,7 +21,7 @@ This repository currently contains:
 - a canonical heliocentric internal frame where the renderer X-Y plane is the ecliptic plane
 - a simplified Earth surface layer with a rotating geographic grid and rough continent outlines that appear when the camera is close to Earth
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth
-- a body selector with independent heliocentric ecliptic, geocentric ecliptic, or geocentric equatorial body-data readout in AU
+- a body selector for the Sun, Moon, and planets from Mercury through Neptune with independent heliocentric ecliptic, geocentric ecliptic, or geocentric equatorial body-data readout in AU
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 

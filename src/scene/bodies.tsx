@@ -239,6 +239,22 @@ export function Venus({ position, isSelected }: { position: THREE.Vector3; isSel
   )
 }
 
+export function Mercury({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(2439.7)}
+      color="#9f9386"
+      emissive="#2c2926"
+      emissiveIntensity={0.12}
+      rotationSpeed={0.22}
+      isSelected={isSelected}
+      haloColor="#c9b8a7"
+      label="Mercury"
+    />
+  )
+}
+
 export function Mars({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
   return (
     <Planet
@@ -267,6 +283,54 @@ export function Jupiter({ position, isSelected }: { position: THREE.Vector3; isS
       isSelected={isSelected}
       haloColor="#f0c7a1"
       label="Jupiter"
+    />
+  )
+}
+
+export function Saturn({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(58232)}
+      color="#d7bd86"
+      emissive="#4d3d26"
+      emissiveIntensity={0.15}
+      rotationSpeed={0.85}
+      isSelected={isSelected}
+      haloColor="#ecd099"
+      label="Saturn"
+    />
+  )
+}
+
+export function Uranus({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(25362)}
+      color="#9ad6d9"
+      emissive="#1b4a50"
+      emissiveIntensity={0.14}
+      rotationSpeed={0.5}
+      isSelected={isSelected}
+      haloColor="#b6edf0"
+      label="Uranus"
+    />
+  )
+}
+
+export function Neptune({ position, isSelected }: { position: THREE.Vector3; isSelected: boolean }) {
+  return (
+    <Planet
+      position={position}
+      radius={getPlanetDisplayRadius(24622)}
+      color="#5976d6"
+      emissive="#182c66"
+      emissiveIntensity={0.16}
+      rotationSpeed={0.55}
+      isSelected={isSelected}
+      haloColor="#8fa8ff"
+      label="Neptune"
     />
   )
 }
