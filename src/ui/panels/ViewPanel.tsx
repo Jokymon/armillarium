@@ -2,8 +2,10 @@ import { useSimulationStore } from '../../state/simulation-store'
 
 export function ViewPanel() {
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
+  const cameraTrackingTarget = useSimulationStore((state) => state.cameraTrackingTarget)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const setCameraPreset = useSimulationStore((state) => state.setCameraPreset)
+  const setCameraTrackingTarget = useSimulationStore((state) => state.setCameraTrackingTarget)
   const setMoonDistanceExaggeration = useSimulationStore((state) => state.setMoonDistanceExaggeration)
 
   return (
@@ -15,6 +17,21 @@ export function ViewPanel() {
         </button>
         <button className={cameraPreset === 'top' ? 'active' : ''} onClick={() => setCameraPreset('top')}>
           Top View
+        </button>
+      </div>
+      <p className="readout">Camera tracking</p>
+      <div className="button-row">
+        <button
+          className={cameraTrackingTarget === 'none' ? 'active' : ''}
+          onClick={() => setCameraTrackingTarget('none')}
+        >
+          None
+        </button>
+        <button
+          className={cameraTrackingTarget === 'selected-body' ? 'active' : ''}
+          onClick={() => setCameraTrackingTarget('selected-body')}
+        >
+          Selected Body
         </button>
       </div>
       <label className="range-field">

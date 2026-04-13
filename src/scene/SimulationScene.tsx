@@ -25,6 +25,7 @@ const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
 export function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
+  const cameraTrackingTarget = useSimulationStore((state) => state.cameraTrackingTarget)
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
@@ -91,7 +92,11 @@ export function SimulationScene() {
       <fog attach="fog" args={['#06111b', 24, 60]} />
       <ambientLight intensity={0.25} />
       <pointLight position={[0, 0, 0]} intensity={900} decay={2} color="#fff1c1" />
-      <CameraController preset={cameraPreset} />
+      <CameraController
+        preset={cameraPreset}
+        trackingTarget={cameraTrackingTarget}
+        selectedBodyPosition={selectedBodyPosition}
+      />
       {showHeliocentricEcliptic ? (
         <EclipticReferenceOverlay
           origin={SUN_ORIGIN}

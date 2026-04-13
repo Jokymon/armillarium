@@ -105,6 +105,7 @@ This document defines the first implementation target and the technology directi
 - FR-14: The system shall provide a simplified Earth globe or map view with visible major land masses to help users choose and recognize observer locations.
 - FR-14a: The simplified Earth globe shall support a geographic latitude/longitude grid and rough continent outlines whose orientation rotates consistently with the simulated Earth over time.
 - FR-15: The system should support saved viewpoints and quick-reset camera presets.
+- FR-15a: The system should support optional camera tracking of the currently selected body while preserving the camera's relative offset in renderer space.
 
 ### 5.4 Coordinate systems and overlays
 

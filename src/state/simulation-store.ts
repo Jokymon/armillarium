@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
+export type CameraTrackingTarget = 'none' | 'selected-body'
 export type SelectableBody =
   | 'Sun'
   | 'Mercury'
@@ -25,6 +26,7 @@ export type SimulationState = {
   stepIncrementDays: number
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
+  cameraTrackingTarget: CameraTrackingTarget
   showHeliocentricEcliptic: boolean
   showGeocentricEcliptic: boolean
   showGeocentricEquatorial: boolean
@@ -36,6 +38,7 @@ export type SimulationState = {
   setStepIncrementDays: (days: number) => void
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
+  setCameraTrackingTarget: (target: CameraTrackingTarget) => void
   setShowHeliocentricEcliptic: (show: boolean) => void
   setShowGeocentricEcliptic: (show: boolean) => void
   setShowGeocentricEquatorial: (show: boolean) => void
@@ -108,6 +111,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     stepIncrementDays: 1,
     speedDaysPerSecond: 1,
     cameraPreset: 'free',
+    cameraTrackingTarget: 'none',
     showHeliocentricEcliptic: true,
     showGeocentricEcliptic: false,
     showGeocentricEquatorial: false,
@@ -123,6 +127,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setStepIncrementDays: (stepIncrementDays) => set({ stepIncrementDays }),
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
+    setCameraTrackingTarget: (cameraTrackingTarget) => set({ cameraTrackingTarget }),
     setShowHeliocentricEcliptic: (showHeliocentricEcliptic) => set({ showHeliocentricEcliptic }),
     setShowGeocentricEcliptic: (showGeocentricEcliptic) => set({ showGeocentricEcliptic }),
     setShowGeocentricEquatorial: (showGeocentricEquatorial) => set({ showGeocentricEquatorial }),

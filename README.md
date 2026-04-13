@@ -16,7 +16,7 @@ This repository currently contains:
 - the initial product/software specification in `docs/software-specification.md`
 - a basic interactive 3D prototype in `src/`
 - reversible time controls with preset step sizes and playback rates for a simple Sun/Earth/Moon scene
-- free-camera and top-view presets
+- free-camera and top-view presets, plus optional selected-body camera tracking
 - independent overlay toggles for heliocentric ecliptic, geocentric ecliptic, and geocentric equatorial J2000 frames
 - a canonical heliocentric internal frame where the renderer X-Y plane is the ecliptic plane
 - a simplified Earth surface layer with a rotating geographic grid and rough continent outlines that appear when the camera is close to Earth
