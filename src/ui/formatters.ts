@@ -27,3 +27,13 @@ export function formatHours(value: number | null) {
 export function formatDistanceAu(value: number) {
   return `${value.toFixed(6)} AU`
 }
+
+export function formatLatitude(value: number) {
+  const hemisphere = value >= 0 ? 'N' : 'S'
+  return `${Math.abs(value).toFixed(3)}° ${hemisphere}`
+}
+
+export function formatLongitude(value: number) {
+  const hemisphere = value >= 0 ? 'E' : 'W'
+  return `${Math.abs(value).toFixed(3)}° ${hemisphere}`
+}

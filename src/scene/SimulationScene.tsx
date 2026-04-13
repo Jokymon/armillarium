@@ -26,12 +26,16 @@ export function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
   const cameraPreset = useSimulationStore((state) => state.cameraPreset)
   const cameraTrackingTarget = useSimulationStore((state) => state.cameraTrackingTarget)
+  const interactionMode = useSimulationStore((state) => state.interactionMode)
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const selectedBody = useSimulationStore((state) => state.selectedBody)
+  const observerLatitude = useSimulationStore((state) => state.observerLatitude)
+  const observerLongitude = useSimulationStore((state) => state.observerLongitude)
   const readoutReferenceFrame = useSimulationStore((state) => state.readoutReferenceFrame)
+  const setObserverLocation = useSimulationStore((state) => state.setObserverLocation)
   const tick = useSimulationStore((state) => state.tick)
 
   const { earthPosition, moonDisplayPosition } = useMemo(
@@ -130,7 +134,15 @@ export function SimulationScene() {
       <Sun isSelected={selectedBody === 'Sun'} />
       <Mercury position={mercuryPosition} isSelected={selectedBody === 'Mercury'} />
       <Venus position={venusPosition} isSelected={selectedBody === 'Venus'} />
-      <Earth position={earthPosition} date={currentDate} isSelected={selectedBody === 'Earth'} />
+      <Earth
+        position={earthPosition}
+        date={currentDate}
+        interactionMode={interactionMode}
+        observerLatitude={observerLatitude}
+        observerLongitude={observerLongitude}
+        isSelected={selectedBody === 'Earth'}
+        onObserverLocationSelected={setObserverLocation}
+      />
       <Mars position={marsPosition} isSelected={selectedBody === 'Mars'} />
       <Jupiter position={jupiterPosition} isSelected={selectedBody === 'Jupiter'} />
       <Saturn position={saturnPosition} isSelected={selectedBody === 'Saturn'} />

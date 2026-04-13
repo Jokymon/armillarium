@@ -246,9 +246,13 @@ function makeOutline(radius: number, points: GeoPoint[]) {
 export function EarthSurface({
   earthPosition,
   radius,
+  observerLatitude,
+  observerLongitude,
 }: {
   earthPosition: THREE.Vector3
   radius: number
+  observerLatitude: number
+  observerLongitude: number
 }) {
   const detailGroupRef = useRef<THREE.Group>(null)
   const lineProps = {
@@ -275,6 +279,10 @@ export function EarthSurface({
   const continents = useMemo(
     () => CONTINENT_OUTLINES.map((outline) => makeOutline(radius * CONTINENT_RADIUS_SCALE, outline)),
     [radius],
+  )
+  const observerMarkerPosition = useMemo(
+    () => latLonToLocalPoint(radius * 1.08, observerLatitude, observerLongitude),
+    [observerLatitude, observerLongitude, radius],
   )
 
   useFrame(({ camera }) => {
@@ -359,6 +367,10 @@ export function EarthSurface({
           <Line points={points} color="#7ea17a" lineWidth={0.95} transparent opacity={0.92} {...lineProps} />
         </group>
       ))}
+      <mesh position={observerMarkerPosition.toArray()}>
+        <sphereGeometry args={[radius * 0.075, 16, 16]} />
+        <meshBasicMaterial color="#fff0a6" transparent opacity={0.95} toneMapped={false} />
+      </mesh>
     </group>
   )
 }

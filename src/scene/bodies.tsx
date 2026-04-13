@@ -1,9 +1,10 @@
 import { Text } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { getEarthSurfaceQuaternion } from '../astronomy/earth'
 import { EarthSurface } from './earth-surface'
+import type { InteractionMode } from '../state/simulation-store'
 
 const EARTH_DISPLAY_RADIUS = 0.16
 const DISPLAY_RADIUS_EXPONENT = 0.35
@@ -147,11 +148,19 @@ export function Sun({ isSelected }: { isSelected: boolean }) {
 export function Earth({
   position,
   date,
+  interactionMode,
+  observerLatitude,
+  observerLongitude,
   isSelected,
+  onObserverLocationSelected,
 }: {
   position: THREE.Vector3
   date: Date
+  interactionMode: InteractionMode
+  observerLatitude: number
+  observerLongitude: number
   isSelected: boolean
+  onObserverLocationSelected: (latitude: number, longitude: number) => void
 }) {
   const earthGroupRef = useRef<THREE.Group>(null)
   const surfaceQuaternion = getEarthSurfaceQuaternion(date)
@@ -163,15 +172,34 @@ export function Earth({
     }
   }, [position, surfaceQuaternion])
 
+  function handleEarthClick(event: ThreeEvent<MouseEvent>) {
+    if (interactionMode !== 'pick-earth-location' || !earthGroupRef.current) {
+      return
+    }
+
+    event.stopPropagation()
+
+    const localPoint = earthGroupRef.current.worldToLocal(event.point.clone()).normalize()
+    const latitude = THREE.MathUtils.radToDeg(Math.asin(THREE.MathUtils.clamp(localPoint.z, -1, 1)))
+    const longitude = THREE.MathUtils.euclideanModulo(THREE.MathUtils.radToDeg(Math.atan2(localPoint.y, localPoint.x)) + 180, 360) - 180
+
+    onObserverLocationSelected(latitude, longitude)
+  }
+
   return (
     <group>
       {isSelected ? <SelectionHalo position={position} radius={0.23} color="#8dd3ff" /> : null}
       <group ref={earthGroupRef}>
-        <mesh>
+        <mesh onClick={handleEarthClick}>
           <sphereGeometry args={[EARTH_DISPLAY_RADIUS, 32, 32]} />
           <meshStandardMaterial color="#4ca7ff" emissive="#0c1f38" emissiveIntensity={0.35} />
         </mesh>
-        <EarthSurface earthPosition={position} radius={EARTH_DISPLAY_RADIUS} />
+        <EarthSurface
+          earthPosition={position}
+          radius={EARTH_DISPLAY_RADIUS}
+          observerLatitude={observerLatitude}
+          observerLongitude={observerLongitude}
+        />
       </group>
       <BodyLabel position={position} radius={EARTH_DISPLAY_RADIUS} label="Earth" color="#8dd3ff" />
     </group>

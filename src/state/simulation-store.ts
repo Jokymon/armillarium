@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 export type CameraPreset = 'free' | 'top'
 export type CameraTrackingTarget = 'none' | 'selected-body'
+export type InteractionMode = 'select-body' | 'pick-earth-location'
 export type SelectableBody =
   | 'Sun'
   | 'Mercury'
@@ -27,11 +28,15 @@ export type SimulationState = {
   speedDaysPerSecond: number
   cameraPreset: CameraPreset
   cameraTrackingTarget: CameraTrackingTarget
+  interactionMode: InteractionMode
   showHeliocentricEcliptic: boolean
   showGeocentricEcliptic: boolean
   showGeocentricEquatorial: boolean
   moonDistanceExaggeration: number
   selectedBody: SelectableBody
+  observerLatitude: number
+  observerLongitude: number
+  observerElevationMeters: number
   readoutReferenceFrame: ReadoutReferenceFrame
   setSliderDays: (days: number) => void
   setPlaying: (playing: boolean) => void
@@ -39,11 +44,13 @@ export type SimulationState = {
   setSpeedDaysPerSecond: (speed: number) => void
   setCameraPreset: (preset: CameraPreset) => void
   setCameraTrackingTarget: (target: CameraTrackingTarget) => void
+  setInteractionMode: (mode: InteractionMode) => void
   setShowHeliocentricEcliptic: (show: boolean) => void
   setShowGeocentricEcliptic: (show: boolean) => void
   setShowGeocentricEquatorial: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
+  setObserverLocation: (latitude: number, longitude: number) => void
   setReadoutReferenceFrame: (frame: ReadoutReferenceFrame) => void
   stepDays: (days: number) => void
   tick: (deltaSeconds: number) => void
@@ -112,11 +119,15 @@ export const useSimulationStore = create<SimulationState>((set) => {
     speedDaysPerSecond: 1,
     cameraPreset: 'free',
     cameraTrackingTarget: 'none',
+    interactionMode: 'select-body',
     showHeliocentricEcliptic: true,
     showGeocentricEcliptic: false,
     showGeocentricEquatorial: false,
     moonDistanceExaggeration: 14,
     selectedBody: 'Earth',
+    observerLatitude: 0,
+    observerLongitude: 0,
+    observerElevationMeters: 0,
     readoutReferenceFrame: 'heliocentric-ecliptic-j2000',
     setSliderDays: (days) =>
       set((state) => ({
@@ -128,11 +139,13 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setSpeedDaysPerSecond: (speedDaysPerSecond) => set({ speedDaysPerSecond }),
     setCameraPreset: (cameraPreset) => set({ cameraPreset }),
     setCameraTrackingTarget: (cameraTrackingTarget) => set({ cameraTrackingTarget }),
+    setInteractionMode: (interactionMode) => set({ interactionMode }),
     setShowHeliocentricEcliptic: (showHeliocentricEcliptic) => set({ showHeliocentricEcliptic }),
     setShowGeocentricEcliptic: (showGeocentricEcliptic) => set({ showGeocentricEcliptic }),
     setShowGeocentricEquatorial: (showGeocentricEquatorial) => set({ showGeocentricEquatorial }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),
+    setObserverLocation: (observerLatitude, observerLongitude) => set({ observerLatitude, observerLongitude }),
     setReadoutReferenceFrame: (readoutReferenceFrame) => set({ readoutReferenceFrame }),
     stepDays: (days) =>
       set((state) => {

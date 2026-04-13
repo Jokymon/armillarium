@@ -102,6 +102,7 @@ This document defines the first implementation target and the technology directi
 - FR-11: The system shall support a top-down ecliptic-plane view.
 - FR-12: The system shall support Earth-centered orbital space view.
 - FR-13: The system shall support Earth-surface observer view using latitude, longitude, elevation, and time, with rough Earth surface context for orientation.
+- FR-13a: The system shall support an explicit Pick Earth Location interaction mode that sets the observer latitude and longitude only when the visible Earth surface is clicked; clicks elsewhere shall be ignored in that mode.
 - FR-14: The system shall provide a simplified Earth globe or map view with visible major land masses to help users choose and recognize observer locations.
 - FR-14a: The simplified Earth globe shall support a geographic latitude/longitude grid and rough continent outlines whose orientation rotates consistently with the simulated Earth over time.
 - FR-15: The system should support saved viewpoints and quick-reset camera presets.
@@ -175,6 +176,7 @@ This document defines the first implementation target and the technology directi
 - SR-10: Display-only exaggeration controls shall alter visualization only; they shall not modify the canonical astronomical positions used by calculations, transforms, or future readouts.
 - SR-11: Astronomy-oriented geocentric equatorial readouts shall use right ascension and declination conventions distinct from later navigation-oriented hour-angle conventions, even when derived from the same canonical vectors.
 - SR-12: Any rendered Earth surface orientation, including prime meridian and continent placement, shall remain approximately consistent with the simulated Earth rotation state for the displayed time.
+- SR-13: Observer-location picking from the rendered Earth shall convert the clicked surface point through the current Earth orientation so the stored geographic coordinates match the simulated time-dependent globe orientation.
 
 Recommended release-1 tolerance target:
 
