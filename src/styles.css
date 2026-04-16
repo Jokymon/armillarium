@@ -92,7 +92,7 @@ code {
   padding: 1rem;
   border-radius: 18px;
   background: rgba(14, 31, 45, 0.72);
-  border: 1px solid rgba(129, 186, 240, 0.12);
+  border: 1px solid #81baf0;
 }
 
 .viewport {
