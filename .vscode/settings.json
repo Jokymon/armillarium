@@ -1,0 +1,3 @@
+{
+    "terminal.integrated.env.windows":{"SHELL_VSC_WS": "${workspaceFolder}"}
+}
