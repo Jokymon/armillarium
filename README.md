@@ -1,6 +1,6 @@
-# Astrolabium
+# Armillarium
 
-Astrolabium is a web-based prototype for exploring the Solar System across time, viewpoints, and astronomical coordinate systems.
+Armillarium is a web-based prototype for exploring the Solar System across time, viewpoints, and astronomical coordinate systems.
 
 The current implementation is a first vertical slice:
 

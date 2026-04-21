@@ -1,8 +1,8 @@
-# Astrolabium Software Specification
+# Armillarium Software Specification
 
 ## 1. Purpose
 
-Astrolabium is a web-based interactive astronomy application for exploring the Solar System across time and across reference frames. Its primary goal is educational: help users understand how celestial motion changes depending on coordinate system, observer location, and projection method.
+Armillarium is a web-based interactive astronomy application for exploring the Solar System across time and across reference frames. Its primary goal is educational: help users understand how celestial motion changes depending on coordinate system, observer location, and projection method.
 
 The application must allow a user to:
 
