@@ -99,7 +99,8 @@ docs/
 - The body-data panel reports physical ecliptic coordinates in AU.
 - Heliocentric ecliptic readouts use `l`, `b`, and `r`.
 - Geocentric ecliptic readouts use `λ`, `β`, and `Δ`.
-- Geocentric equatorial readouts use `α`, `δ`, and `Δ`.`r`n- Topocentric horizontal readouts use `Az`, `h`, and `ρ`.
+- Geocentric equatorial readouts use `α`, `δ`, and `Δ`.
+- Topocentric horizontal readouts use `Az`, `h`, and `ρ`.
 - Heliocentric and geocentric ecliptic overlays can be shown independently while the body-data readout frame is selected separately.
 - `+X` points toward the J2000 vernal equinox.
 - `+Z` points toward the north ecliptic pole.
