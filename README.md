@@ -17,7 +17,7 @@ This repository currently contains:
 - a basic interactive 3D prototype in `src/`
 - reversible time controls with preset step sizes and playback rates for a simple Sun/Earth/Moon scene
 - free-camera and top-view presets, plus optional selected-body camera tracking
-- independent overlay toggles for heliocentric ecliptic, geocentric ecliptic, and geocentric equatorial J2000 frames
+- independent overlay toggles for heliocentric ecliptic, geocentric ecliptic, geocentric equatorial J2000, and topocentric horizontal observer frames
 - a canonical heliocentric internal frame where the renderer X-Y plane is the ecliptic plane
 - a simplified Earth surface layer with a rotating geographic grid, rough continent outlines, and a pickable observer-location marker that appears when the camera is close to Earth
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth

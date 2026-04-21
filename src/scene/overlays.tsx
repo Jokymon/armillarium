@@ -6,6 +6,8 @@ import * as THREE from 'three'
 const AXIS_LENGTH = 8
 const ECLIPTIC_RADIUS = 15
 const EQUATORIAL_RADIUS = 7.5
+const HORIZONTAL_AXIS_LENGTH = 1.3
+const HORIZONTAL_RADIUS = 1.4
 const EQJ_TO_ECL = Rotation_EQJ_ECL()
 
 function AxisLabels() {
@@ -35,6 +37,22 @@ function EquatorialAxisLabels() {
       </Text>
       <Text position={[0, 0, AXIS_LENGTH + 0.95]} fontSize={0.3} color="#ff9f80">
         Z / North Celestial Pole
+      </Text>
+    </group>
+  )
+}
+
+function HorizontalAxisLabels() {
+  return (
+    <group>
+      <Text position={[HORIZONTAL_AXIS_LENGTH + 0.28, 0, 0]} fontSize={0.11} color="#bde6ff">
+        X / North
+      </Text>
+      <Text position={[0, HORIZONTAL_AXIS_LENGTH + 0.28, 0]} fontSize={0.11} color="#b7f5ef">
+        Y / West
+      </Text>
+      <Text position={[0, 0, HORIZONTAL_AXIS_LENGTH + 0.28]} fontSize={0.11} color="#ffd7ab">
+        Z / Zenith
       </Text>
     </group>
   )
@@ -130,6 +148,50 @@ export function GeocentricEquatorialOverlay({
         Geocentric Equatorial J2000
       </Text>
       <EquatorialAxisLabels />
+    </group>
+  )
+}
+
+export function TopocentricHorizontalOverlay({
+  origin,
+  orientation,
+}: {
+  origin: THREE.Vector3
+  orientation: THREE.Quaternion
+}) {
+  const outlinePoints = useMemo(() => {
+    return Array.from({ length: 65 }, (_, index) => {
+      const angle = (index / 64) * Math.PI * 2
+      return new THREE.Vector3(Math.cos(angle) * HORIZONTAL_RADIUS, Math.sin(angle) * HORIZONTAL_RADIUS, 0)
+    })
+  }, [])
+
+  return (
+    <group position={origin.toArray()} quaternion={orientation}>
+      <mesh>
+        <circleGeometry args={[HORIZONTAL_RADIUS, 64]} />
+        <meshBasicMaterial color="#245f58" transparent opacity={0.18} side={THREE.DoubleSide} />
+      </mesh>
+      <Line points={outlinePoints} color="#58b6ac" lineWidth={1.1} />
+      <Line
+        points={[[-HORIZONTAL_AXIS_LENGTH, 0, 0], [HORIZONTAL_AXIS_LENGTH, 0, 0]]}
+        color="#8fd7ff"
+        lineWidth={1.05}
+      />
+      <Line
+        points={[[0, -HORIZONTAL_AXIS_LENGTH, 0], [0, HORIZONTAL_AXIS_LENGTH, 0]]}
+        color="#8ef0e0"
+        lineWidth={1.05}
+      />
+      <Line
+        points={[[0, 0, -HORIZONTAL_AXIS_LENGTH * 0.3], [0, 0, HORIZONTAL_AXIS_LENGTH]]}
+        color="#ffcb93"
+        lineWidth={1.15}
+      />
+      <Text position={[0.32, -0.48, 0]} fontSize={0.12} color="#9fe7dd">
+        Topocentric Horizontal
+      </Text>
+      <HorizontalAxisLabels />
     </group>
   )
 }

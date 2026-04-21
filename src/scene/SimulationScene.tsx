@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { useMemo } from 'react'
 import { Body } from 'astronomy-engine'
 import * as THREE from 'three'
+import { getObserverSurfacePosition, getTopocentricHorizontalAxes } from '../astronomy/earth'
 import { getBodyPositions, toSceneVector } from '../astronomy/positions'
 import { useSimulationStore } from '../state/simulation-store'
 import { Earth, Jupiter, Mars, Mercury, Moon, Neptune, Saturn, Sun, Uranus, Venus } from './bodies'
@@ -18,9 +19,10 @@ import {
   UranusOrbit,
   VenusOrbit,
 } from './guides'
-import { EclipticReferenceOverlay, GeocentricEquatorialOverlay } from './overlays'
+import { EclipticReferenceOverlay, GeocentricEquatorialOverlay, TopocentricHorizontalOverlay } from './overlays'
 
 const SUN_ORIGIN = new THREE.Vector3(0, 0, 0)
+const EARTH_DISPLAY_RADIUS = 0.16
 
 export function SimulationScene() {
   const currentDate = useSimulationStore((state) => state.currentDate)
@@ -30,6 +32,7 @@ export function SimulationScene() {
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
+  const showTopocentricHorizontal = useSimulationStore((state) => state.showTopocentricHorizontal)
   const moonDistanceExaggeration = useSimulationStore((state) => state.moonDistanceExaggeration)
   const selectedBody = useSimulationStore((state) => state.selectedBody)
   const observerLatitude = useSimulationStore((state) => state.observerLatitude)
@@ -49,6 +52,19 @@ export function SimulationScene() {
   const saturnPosition = useMemo(() => toSceneVector(Body.Saturn, currentDate), [currentDate])
   const uranusPosition = useMemo(() => toSceneVector(Body.Uranus, currentDate), [currentDate])
   const neptunePosition = useMemo(() => toSceneVector(Body.Neptune, currentDate), [currentDate])
+  const observerPosition = useMemo(
+    () => getObserverSurfacePosition(earthPosition, currentDate, observerLatitude, observerLongitude, EARTH_DISPLAY_RADIUS * 1.03),
+    [currentDate, earthPosition, observerLatitude, observerLongitude],
+  )
+  const topocentricHorizontalOrientation = useMemo(() => {
+    const { north, west, zenith } = getTopocentricHorizontalAxes(currentDate, observerLatitude, observerLongitude)
+    const matrix = new THREE.Matrix4().makeBasis(north, west, zenith)
+    const quaternion = new THREE.Quaternion()
+
+    matrix.decompose(new THREE.Vector3(), quaternion, new THREE.Vector3())
+
+    return quaternion
+  }, [currentDate, observerLatitude, observerLongitude])
   const selectedBodyPosition = useMemo(() => {
     switch (selectedBody) {
       case 'Sun':
@@ -120,6 +136,9 @@ export function SimulationScene() {
           origin={earthPosition}
           highlighted={readoutReferenceFrame === 'geocentric-equatorial-j2000'}
         />
+      ) : null}
+      {showTopocentricHorizontal ? (
+        <TopocentricHorizontalOverlay origin={observerPosition} orientation={topocentricHorizontalOrientation} />
       ) : null}
       <MercuryOrbit />
       <VenusOrbit />

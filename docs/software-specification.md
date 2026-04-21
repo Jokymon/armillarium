@@ -111,18 +111,19 @@ This document defines the first implementation target and the technology directi
 ### 5.4 Coordinate systems and overlays
 
 - FR-16: The system shall provide visible coordinate axes for the active frame.
+- FR-17a: The system shall support a topocentric horizontal overlay anchored at the selected observer location on Earth, with zenith as the z-axis and the initial astronomy-oriented horizontal axis convention used consistently in both rendering and later readouts.
 - FR-17: The system shall support overlays for:
-- Ecliptic plane
-- Earth equatorial plane
-- Individual planetary orbital planes
-- Celestial equator
-- Local horizon plane
-- Local meridian
-- Zenith and nadir
-- Cardinal directions
-- Prime meridian and geographic reference grid
-- Celestial meridians and hour circles
-- Celestial poles
+    - Ecliptic plane
+    - Earth equatorial plane
+    - Individual planetary orbital planes
+    - Celestial equator
+    - Local horizon plane
+    - Local meridian
+    - Zenith and nadir
+    - Cardinal directions
+    - Prime meridian and geographic reference grid
+    - Celestial meridians and hour circles
+    - Celestial poles
 - FR-18: The system shall allow enabling multiple overlays simultaneously and independently of the currently selected body-data readout frame.
 - FR-19: The system shall provide an explicit body-data readout frame selector and display coordinates for selected bodies in that chosen frame, including at least:
 - Heliocentric Cartesian
@@ -177,6 +178,7 @@ This document defines the first implementation target and the technology directi
 - SR-11: Astronomy-oriented geocentric equatorial readouts shall use right ascension and declination conventions distinct from later navigation-oriented hour-angle conventions, even when derived from the same canonical vectors.
 - SR-12: Any rendered Earth surface orientation, including prime meridian and continent placement, shall remain approximately consistent with the simulated Earth rotation state for the displayed time.
 - SR-13: Observer-location picking from the rendered Earth shall convert the clicked surface point through the current Earth orientation so the stored geographic coordinates match the simulated time-dependent globe orientation.
+- SR-14: The rendered topocentric horizontal overlay shall remain consistent with the selected observer latitude and longitude, the current Earth orientation, and the chosen astronomy-oriented azimuth-axis convention.
 
 Recommended release-1 tolerance target:
 

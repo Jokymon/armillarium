@@ -32,6 +32,7 @@ export type SimulationState = {
   showHeliocentricEcliptic: boolean
   showGeocentricEcliptic: boolean
   showGeocentricEquatorial: boolean
+  showTopocentricHorizontal: boolean
   moonDistanceExaggeration: number
   selectedBody: SelectableBody
   observerLatitude: number
@@ -48,6 +49,7 @@ export type SimulationState = {
   setShowHeliocentricEcliptic: (show: boolean) => void
   setShowGeocentricEcliptic: (show: boolean) => void
   setShowGeocentricEquatorial: (show: boolean) => void
+  setShowTopocentricHorizontal: (show: boolean) => void
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
   setObserverLocation: (latitude: number, longitude: number) => void
@@ -123,6 +125,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     showHeliocentricEcliptic: true,
     showGeocentricEcliptic: false,
     showGeocentricEquatorial: false,
+    showTopocentricHorizontal: false,
     moonDistanceExaggeration: 14,
     selectedBody: 'Earth',
     observerLatitude: 0,
@@ -143,6 +146,7 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setShowHeliocentricEcliptic: (showHeliocentricEcliptic) => set({ showHeliocentricEcliptic }),
     setShowGeocentricEcliptic: (showGeocentricEcliptic) => set({ showGeocentricEcliptic }),
     setShowGeocentricEquatorial: (showGeocentricEquatorial) => set({ showGeocentricEquatorial }),
+    setShowTopocentricHorizontal: (showTopocentricHorizontal) => set({ showTopocentricHorizontal }),
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),
     setObserverLocation: (observerLatitude, observerLongitude) => set({ observerLatitude, observerLongitude }),

@@ -4,9 +4,11 @@ export function EclipticReferencePanel() {
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
+  const showTopocentricHorizontal = useSimulationStore((state) => state.showTopocentricHorizontal)
   const setShowHeliocentricEcliptic = useSimulationStore((state) => state.setShowHeliocentricEcliptic)
   const setShowGeocentricEcliptic = useSimulationStore((state) => state.setShowGeocentricEcliptic)
   const setShowGeocentricEquatorial = useSimulationStore((state) => state.setShowGeocentricEquatorial)
+  const setShowTopocentricHorizontal = useSimulationStore((state) => state.setShowTopocentricHorizontal)
 
   return (
     <section>
@@ -34,6 +36,14 @@ export function EclipticReferencePanel() {
           onChange={(event) => setShowGeocentricEquatorial(event.target.checked)}
         />
         <span>Geocentric equatorial J2000</span>
+      </label>
+      <label className="toggle-field second-toggle">
+        <input
+          type="checkbox"
+          checked={showTopocentricHorizontal}
+          onChange={(event) => setShowTopocentricHorizontal(event.target.checked)}
+        />
+        <span>Topocentric horizontal</span>
       </label>
     </section>
   )
