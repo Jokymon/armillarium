@@ -23,7 +23,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -205,6 +206,88 @@ h2 {
 
 .subtle-readout {
   color: #9eb9cf;
+}
+
+.error-readout {
+  color: #ffb4b4;
+}
+
+.form-field {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.9rem;
+}
+
+.form-field span,
+.form-field small {
+  color: #bfd8ee;
+}
+
+.form-field small {
+  font-size: 0.82rem;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  border: 1px solid #355168;
+  background: #102131;
+  color: #ecf4fb;
+  border-radius: 12px;
+  padding: 0.7rem 0.85rem;
+}
+
+.inline-field {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 0.65rem;
+}
+
+.coordinate-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(3, 10, 16, 0.72);
+}
+
+.modal-card {
+  width: min(34rem, 100%);
+  max-height: min(90vh, 44rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #0b1c2b 0%, #091521 100%);
+  border: 1px solid #81baf0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9dc8ef;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  justify-content: flex-end;
 }
 
 ul {

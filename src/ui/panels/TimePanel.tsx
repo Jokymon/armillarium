@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { formatDate, formatJulianDate } from '../formatters'
 import {
   PLAYBACK_RATE_OPTIONS,
   STEP_INCREMENT_OPTIONS,
   useSimulationStore,
 } from '../../state/simulation-store'
+import { SetNowHomeDialog } from './SetNowHomeDialog'
 
 export function TimePanel() {
   const currentDate = useSimulationStore((state) => state.currentDate)
@@ -17,6 +19,7 @@ export function TimePanel() {
   const setSpeedDaysPerSecond = useSimulationStore((state) => state.setSpeedDaysPerSecond)
   const stepDays = useSimulationStore((state) => state.stepDays)
   const resetNow = useSimulationStore((state) => state.resetNow)
+  const [isReferenceDialogOpen, setIsReferenceDialogOpen] = useState(false)
 
   return (
     <section>
@@ -26,6 +29,7 @@ export function TimePanel() {
         <button onClick={() => setPlaying(!playing)}>{playing ? 'Pause' : 'Play'}</button>
         <button onClick={() => stepDays(stepIncrementDays)}>Forward</button>
         <button onClick={resetNow}>Reset</button>
+        <button onClick={() => setIsReferenceDialogOpen(true)}>Set Now / Home</button>
       </div>
       <div className="segmented-field">
         <span>Step size</span>
@@ -70,6 +74,7 @@ export function TimePanel() {
       </label>
       <p className="readout">Current UTC: {formatDate(currentDate)}</p>
       <p className="readout">Julian Date: {formatJulianDate(currentDate)}</p>
+      <SetNowHomeDialog isOpen={isReferenceDialogOpen} onClose={() => setIsReferenceDialogOpen(false)} />
     </section>
   )
 }

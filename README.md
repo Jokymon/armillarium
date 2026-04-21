@@ -18,6 +18,7 @@ This repository currently contains:
 - the initial product/software specification in `docs/software-specification.md`
 - a basic interactive 3D prototype in `src/`
 - reversible time controls with preset step sizes and playback rates for a simple Sun/Earth/Moon scene
+- a manual `Set Now / Home` dialog for debugging and validation that can override the simulation reference time in UTC or Julian date and set the observer latitude/longitude numerically
 - free-camera and top-view presets, plus optional selected-body camera tracking
 - independent overlay toggles for heliocentric ecliptic, geocentric ecliptic, geocentric equatorial J2000, and topocentric horizontal observer frames
 - a canonical heliocentric internal frame where the renderer X-Y plane is the ecliptic plane
@@ -95,6 +96,7 @@ docs/
 ## Notes
 
 - The renderer stores the scene in heliocentric Ecliptic J2000.
+- The `Set Now / Home` UTC input uses the browser's native date/time picker. It is interpreted as UTC even if the browser displays the field in a localized date/time format.
 - Earth and Moon positions are derived from Astronomy Engine heliocentric vectors converted from EQJ to Ecliptic J2000.
 - The body-data panel reports physical ecliptic coordinates in AU.
 - Heliocentric ecliptic readouts use `l`, `b`, and `r`.

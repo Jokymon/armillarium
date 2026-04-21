@@ -87,6 +87,8 @@ This document defines the first implementation target and the technology directi
 - FR-2: The system shall support paused, stepwise, and animated time control, with step increments and playback rates configurable independently.
 - FR-3: The system shall support multiple discrete step increments and multiple playback-rate presets, ranging from hourly instructional changes to accelerated multi-year playback.
 - FR-4: The system shall expose the current simulation time in UTC and Julian date.
+- FR-4a: The system shall support a manual debugging/validation override for the simulation reference time, allowing the user to set "now" either as a UTC date/time entry down to seconds or as a Julian date.
+- FR-4b: The manual UTC date/time override shall use the browser's native date/time control, tolerate locale-specific visual presentation by the browser UI, and interpret the selected value as UTC.
 - FR-5: The system should later support other time standards where scientifically useful, such as TT/TDB, but UTC is sufficient for the first release UI.
 
 ### 5.2 Celestial bodies
@@ -103,6 +105,7 @@ This document defines the first implementation target and the technology directi
 - FR-12: The system shall support Earth-centered orbital space view.
 - FR-13: The system shall support Earth-surface observer view using latitude, longitude, elevation, and time, with rough Earth surface context for orientation.
 - FR-13a: The system shall support an explicit Pick Earth Location interaction mode that sets the observer latitude and longitude only when the visible Earth surface is clicked; clicks elsewhere shall be ignored in that mode.
+- FR-13b: The system shall support a manual debugging/validation override for the observer location using decimal latitude/longitude values with explicit N/S and E/W hemisphere selection.
 - FR-14: The system shall provide a simplified Earth globe or map view with visible major land masses to help users choose and recognize observer locations.
 - FR-14a: The simplified Earth globe shall support a geographic latitude/longitude grid and rough continent outlines whose orientation rotates consistently with the simulated Earth over time.
 - FR-15: The system should support saved viewpoints and quick-reset camera presets.

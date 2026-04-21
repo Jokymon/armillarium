@@ -54,6 +54,7 @@ export type SimulationState = {
   setMoonDistanceExaggeration: (factor: number) => void
   setSelectedBody: (body: SelectableBody) => void
   setObserverLocation: (latitude: number, longitude: number) => void
+  setReferenceNowAndHome: (date: Date, latitude: number, longitude: number) => void
   setReadoutReferenceFrame: (frame: ReadoutReferenceFrame) => void
   stepDays: (days: number) => void
   tick: (deltaSeconds: number) => void
@@ -156,6 +157,15 @@ export const useSimulationStore = create<SimulationState>((set) => {
     setMoonDistanceExaggeration: (moonDistanceExaggeration) => set({ moonDistanceExaggeration }),
     setSelectedBody: (selectedBody) => set({ selectedBody }),
     setObserverLocation: (observerLatitude, observerLongitude) => set({ observerLatitude, observerLongitude }),
+    setReferenceNowAndHome: (date, observerLatitude, observerLongitude) =>
+      set({
+        baseDate: date,
+        currentDate: date,
+        sliderDays: 0,
+        playing: false,
+        observerLatitude,
+        observerLongitude,
+      }),
     setReadoutReferenceFrame: (readoutReferenceFrame) => set({ readoutReferenceFrame }),
     stepDays: (days) =>
       set((state) => {
