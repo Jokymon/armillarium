@@ -14,8 +14,8 @@ export function ControlPanel() {
       </div>
       <div className="control-panel-content">
         <TimePanel />
-        <ViewPanel />
         <BodyDataPanel />
+        <ViewPanel />
         <ObserverLocationPanel />
         <EclipticReferencePanel />
         <DebugPanel />
