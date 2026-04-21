@@ -2,6 +2,8 @@
 
 Armillarium is a web-based prototype for exploring the Solar System across time, viewpoints, and astronomical coordinate systems.
 
+It is licensed under the GNU General Public License v3.0 or later. See `LICENSE`.
+
 The current implementation is a first vertical slice:
 
 - React + TypeScript + Vite frontend
