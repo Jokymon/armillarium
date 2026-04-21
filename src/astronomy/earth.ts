@@ -11,6 +11,13 @@ function rotateEqjVectorToEcliptic(vector: Vector) {
   return new THREE.Vector3(eclipticVector.x, eclipticVector.y, eclipticVector.z).normalize()
 }
 
+export function observerVectorToEclipticAu(date: Date, latitude: number, longitude: number, heightMeters = 0) {
+  const observer = new Observer(latitude, longitude, heightMeters)
+  const observerVectorEqj = ObserverVector(date, observer, false)
+  const eclipticVector = RotateVector(EQJ_TO_ECL, observerVectorEqj)
+  return new THREE.Vector3(eclipticVector.x, eclipticVector.y, eclipticVector.z)
+}
+
 export function getEarthFixedAxes(date: Date) {
   const primeMeridianEqj = ObserverVector(date, GREENWICH_OBSERVER, false)
   const eastAxisEqj = ObserverVector(date, EAST_OBSERVER, false)

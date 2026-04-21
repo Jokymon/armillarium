@@ -178,7 +178,7 @@ This document defines the first implementation target and the technology directi
 - SR-11: Astronomy-oriented geocentric equatorial readouts shall use right ascension and declination conventions distinct from later navigation-oriented hour-angle conventions, even when derived from the same canonical vectors.
 - SR-12: Any rendered Earth surface orientation, including prime meridian and continent placement, shall remain approximately consistent with the simulated Earth rotation state for the displayed time.
 - SR-13: Observer-location picking from the rendered Earth shall convert the clicked surface point through the current Earth orientation so the stored geographic coordinates match the simulated time-dependent globe orientation.
-- SR-14: The rendered topocentric horizontal overlay shall remain consistent with the selected observer latitude and longitude, the current Earth orientation, and the chosen astronomy-oriented azimuth-axis convention.
+- SR-14: The rendered topocentric horizontal overlay and its associated body-data readouts shall remain consistent with the selected observer latitude and longitude, the current Earth orientation, and the chosen astronomy-oriented azimuth-axis convention.
 
 Recommended release-1 tolerance target:
 

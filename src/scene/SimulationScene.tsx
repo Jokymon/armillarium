@@ -100,7 +100,12 @@ export function SimulationScene() {
     uranusPosition,
     venusPosition,
   ])
-  const selectedFrameOrigin = readoutReferenceFrame === 'heliocentric-ecliptic-j2000' ? SUN_ORIGIN : earthPosition
+  const selectedFrameOrigin =
+    readoutReferenceFrame === 'heliocentric-ecliptic-j2000'
+      ? SUN_ORIGIN
+      : readoutReferenceFrame === 'topocentric-horizontal'
+        ? observerPosition
+        : earthPosition
 
   useFrame((_, delta) => {
     tick(delta)

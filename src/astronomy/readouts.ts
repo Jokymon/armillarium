@@ -2,6 +2,7 @@ import { AstroTime, Body, RotateVector, Rotation_ECL_EQJ, Vector } from 'astrono
 import * as THREE from 'three'
 import type { ReadoutReferenceFrame } from '../state/simulation-store'
 import { toEclipticVectorAu } from './coordinates'
+import { getTopocentricHorizontalAxes, observerVectorToEclipticAu } from './earth'
 
 export type BodyReadout = {
   primaryValue: number | null
@@ -24,6 +25,10 @@ function getReadoutVectorAu(body: Body, date: Date, frame: ReadoutReferenceFrame
 
   const geocentricEclipticVector = getGeocentricEclipticVectorAu(body, date)
 
+  if (frame === 'topocentric-horizontal') {
+    return geocentricEclipticVector
+  }
+
   if (frame === 'geocentric-equatorial-j2000') {
     const epoch = new AstroTime(0)
     const eqjVector = RotateVector(
@@ -36,8 +41,20 @@ function getReadoutVectorAu(body: Body, date: Date, frame: ReadoutReferenceFrame
   return geocentricEclipticVector
 }
 
-export function getBodyReadout(body: Body, date: Date, frame: ReadoutReferenceFrame): BodyReadout {
-  const vector = getReadoutVectorAu(body, date, frame)
+export function getBodyReadout(
+  body: Body,
+  date: Date,
+  frame: ReadoutReferenceFrame,
+  observerLatitude = 0,
+  observerLongitude = 0,
+  observerElevationMeters = 0,
+): BodyReadout {
+  const vector =
+    frame === 'topocentric-horizontal'
+      ? getGeocentricEclipticVectorAu(body, date).sub(
+          observerVectorToEclipticAu(date, observerLatitude, observerLongitude, observerElevationMeters),
+        )
+      : getReadoutVectorAu(body, date, frame)
   const distanceAu = vector.length()
 
   if (distanceAu === 0) {
@@ -58,6 +75,26 @@ export function getBodyReadout(body: Body, date: Date, frame: ReadoutReferenceFr
     return {
       primaryValue: rightAscensionHours,
       secondaryValue: declinationDeg,
+      distanceAu,
+    }
+  }
+
+  if (frame === 'topocentric-horizontal') {
+    const { north, west, zenith } = getTopocentricHorizontalAxes(date, observerLatitude, observerLongitude)
+    const northComponent = vector.dot(north)
+    const westComponent = vector.dot(west)
+    const zenithComponent = vector.dot(zenith)
+    const azimuthDeg = THREE.MathUtils.euclideanModulo(
+      THREE.MathUtils.radToDeg(Math.atan2(westComponent, northComponent)),
+      360,
+    )
+    const altitudeDeg = THREE.MathUtils.radToDeg(
+      Math.atan2(zenithComponent, Math.hypot(northComponent, westComponent)),
+    )
+
+    return {
+      primaryValue: azimuthDeg,
+      secondaryValue: altitudeDeg,
       distanceAu,
     }
   }

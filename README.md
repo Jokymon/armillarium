@@ -21,7 +21,7 @@ This repository currently contains:
 - a canonical heliocentric internal frame where the renderer X-Y plane is the ecliptic plane
 - a simplified Earth surface layer with a rotating geographic grid, rough continent outlines, and a pickable observer-location marker that appears when the camera is close to Earth
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth
-- a body selector for the Sun, Moon, and planets from Mercury through Neptune with independent heliocentric ecliptic, geocentric ecliptic, or geocentric equatorial body-data readout in AU
+- a body selector for the Sun, Moon, and planets from Mercury through Neptune with independent heliocentric ecliptic, geocentric ecliptic, geocentric equatorial, or topocentric horizontal body-data readouts in AU
 
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
 
@@ -97,7 +97,7 @@ docs/
 - The body-data panel reports physical ecliptic coordinates in AU.
 - Heliocentric ecliptic readouts use `l`, `b`, and `r`.
 - Geocentric ecliptic readouts use `λ`, `β`, and `Δ`.
-- Geocentric equatorial readouts use `α`, `δ`, and `Δ`.
+- Geocentric equatorial readouts use `α`, `δ`, and `Δ`.`r`n- Topocentric horizontal readouts use `Az`, `h`, and `ρ`.
 - Heliocentric and geocentric ecliptic overlays can be shown independently while the body-data readout frame is selected separately.
 - `+X` points toward the J2000 vernal equinox.
 - `+Z` points toward the north ecliptic pole.

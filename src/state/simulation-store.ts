@@ -18,6 +18,7 @@ export type ReadoutReferenceFrame =
   | 'heliocentric-ecliptic-j2000'
   | 'geocentric-ecliptic-j2000'
   | 'geocentric-equatorial-j2000'
+  | 'topocentric-horizontal'
 
 export type SimulationState = {
   baseDate: Date
@@ -106,6 +107,11 @@ export const READOUT_REFERENCE_FRAME_OPTIONS: Array<{
     value: 'geocentric-equatorial-j2000',
     shortLabel: 'Geo Equatorial',
     label: 'Geocentric Equatorial J2000',
+  },
+  {
+    value: 'topocentric-horizontal',
+    shortLabel: 'Topo Horizontal',
+    label: 'Topocentric Horizontal',
   },
 ]
 

@@ -33,4 +33,11 @@ export const READOUT_CONFIG: Record<ReadoutReferenceFrame, ReadoutConfig> = {
     primaryFormatter: formatHours,
     secondaryFormatter: formatDegrees,
   },
+  'topocentric-horizontal': {
+    primaryLabel: 'Az',
+    secondaryLabel: 'h',
+    distanceLabel: 'ρ',
+    primaryFormatter: formatDegrees,
+    secondaryFormatter: formatDegrees,
+  },
 }

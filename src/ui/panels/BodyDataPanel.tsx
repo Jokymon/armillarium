@@ -12,12 +12,24 @@ export function BodyDataPanel() {
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)
+  const showTopocentricHorizontal = useSimulationStore((state) => state.showTopocentricHorizontal)
+  const observerLatitude = useSimulationStore((state) => state.observerLatitude)
+  const observerLongitude = useSimulationStore((state) => state.observerLongitude)
+  const observerElevationMeters = useSimulationStore((state) => state.observerElevationMeters)
   const setSelectedBody = useSimulationStore((state) => state.setSelectedBody)
   const setReadoutReferenceFrame = useSimulationStore((state) => state.setReadoutReferenceFrame)
 
   const selectedBodyReadout = useMemo(
-    () => getBodyReadout(selectedBody as Body, currentDate, readoutReferenceFrame),
-    [selectedBody, currentDate, readoutReferenceFrame],
+    () =>
+      getBodyReadout(
+        selectedBody as Body,
+        currentDate,
+        readoutReferenceFrame,
+        observerLatitude,
+        observerLongitude,
+        observerElevationMeters,
+      ),
+    [selectedBody, currentDate, readoutReferenceFrame, observerLatitude, observerLongitude, observerElevationMeters],
   )
   const activeFrame = READOUT_REFERENCE_FRAME_OPTIONS.find((option) => option.value === readoutReferenceFrame)
   const readoutConfig = READOUT_CONFIG[readoutReferenceFrame]
@@ -28,7 +40,9 @@ export function BodyDataPanel() {
       ? showHeliocentricEcliptic
       : readoutReferenceFrame === 'geocentric-ecliptic-j2000'
         ? showGeocentricEcliptic
-        : showGeocentricEquatorial
+        : readoutReferenceFrame === 'geocentric-equatorial-j2000'
+          ? showGeocentricEquatorial
+          : showTopocentricHorizontal
 
   return (
     <section>
