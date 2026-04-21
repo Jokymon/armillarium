@@ -1,6 +1,6 @@
 import { useSimulationStore } from '../../state/simulation-store'
 
-export function EclipticReferencePanel() {
+export function OverlayPanel() {
   const showHeliocentricEcliptic = useSimulationStore((state) => state.showHeliocentricEcliptic)
   const showGeocentricEcliptic = useSimulationStore((state) => state.showGeocentricEcliptic)
   const showGeocentricEquatorial = useSimulationStore((state) => state.showGeocentricEquatorial)

@@ -1,7 +1,7 @@
 import { BodyDataPanel } from './panels/BodyDataPanel'
 import { DebugPanel } from './panels/DebugPanel'
-import { EclipticReferencePanel } from './panels/EclipticReferencePanel'
 import { ObserverLocationPanel } from './panels/ObserverLocationPanel'
+import { OverlayPanel } from './panels/OverlayPanel'
 import { TimePanel } from './panels/TimePanel'
 import { ViewPanel } from './panels/ViewPanel'
 
@@ -17,7 +17,7 @@ export function ControlPanel() {
         <BodyDataPanel />
         <ViewPanel />
         <ObserverLocationPanel />
-        <EclipticReferencePanel />
+        <OverlayPanel />
         <DebugPanel />
       </div>
     </aside>
