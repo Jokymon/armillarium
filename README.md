@@ -1,15 +1,17 @@
 # Armillarium
 
-Armillarium is a web-based prototype for exploring the Solar System across time, viewpoints, and astronomical coordinate systems.
+Armillarium is an interactive 3D prototype for exploring celestial mechanics and the reference frames used to describe the motion of celestial bodies.
 
-It is licensed under the GNU General Public License v3.0 or later. See `LICENSE`.
+It is intended as an educational tool: something you can use to inspect positions, switch between frames, and build intuition for how different astronomical viewpoints relate to one another.
 
-The current implementation is a first vertical slice:
+You can try the current prototype here: [GitHub Pages deployment](https://jokymon.github.io/armillarium/).
 
-- React + TypeScript + Vite frontend
-- Three.js rendering via React Three Fiber
-- Astronomy Engine for real heliocentric body positions
-- Solar System scene with Sun, Moon, and planets from Mercury through Neptune, plus time controls, camera presets, and reference-frame overlays
+## What you can do right now
+
+- Step time forward and backward manually or let it run automatically at different speeds.
+- Move the camera freely through the planetary system.
+- Inspect readouts for a selected celestial body.
+- Toggle the visualization of different astronomical reference planes.
 
 ## Current Scope
 
@@ -26,7 +28,30 @@ This repository currently contains:
 - a display-only Moon distance exaggeration control so the Moon remains visible next to the exaggerated Earth
 - a body selector for the Sun, Moon, and planets from Mercury through Neptune with independent heliocentric ecliptic, geocentric ecliptic, geocentric equatorial, or topocentric horizontal body-data readouts in AU
 
+## Status
+
 This is intentionally an early prototype. Visual scale, UI structure, overlays, and educational workflows will evolve from here.
+
+## Disclaimer
+
+This application is meant as an instructional tool to improve understanding of these mechanics. It is **not suitable for navigational purposes**. Do not use the data obtained from this tool to plan your trips or any other safety-relevant purposes.
+
+The calculations are intended to be as close to reality as is practical, but they may not be precise enough for your purposes. Sizes and distances are exaggerated in places to improve usability.
+
+## Roadmap
+
+The following features are planned for future additions, in no particular order.
+
+- Visualize the angles corresponding to the current readout values directly in the rendered view.
+- Display angles relevant to celestial navigation in the rendered view, such as GHA, LHA, Az, and `h`.
+- Add more ways to lock the camera to a position and follow a celestial body or viewing direction.
+- Toggle the display of the GP of a celestial body on the surface of the Earth together with the relevant angles.
+
+## The name
+
+The name of this project, Armillarium, is derived from ancient devices used to better understand celestial
+mechanics. Some of those devices were called armillary spheres. Armillarium is a latinized and shortened version of
+that name, intended as a small homage to those beautiful and delicate instruments.
 
 ## Tech Stack
 
@@ -38,6 +63,8 @@ This is intentionally an early prototype. Visual scale, UI structure, overlays, 
 - React Three Drei
 - Zustand
 - Astronomy Engine
+
+This application is licensed under the GNU General Public License v3.0 or later. See `LICENSE`.
 
 ## Local Development
 
@@ -112,10 +139,3 @@ docs/
 - Planet sizes and some displayed distances are visually exaggerated for usability.
 - Earth surface grid and continent outlines are simplified and become visible only when the camera is sufficiently close to Earth.
 - The current build is a prototype baseline, not yet optimized for bundle size.
-
-## Next Likely Steps
-
-- add equatorial readout frames and overlays
-- add more coordinate-system guides, overlays, and readout-frame options
-- start Earth-surface observer views
-- introduce the first Astronomy Mode vs. Navigation Mode UI distinctions
