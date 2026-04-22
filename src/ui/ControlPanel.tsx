@@ -9,8 +9,7 @@ export function ControlPanel() {
   return (
     <aside className="control-panel">
       <div className="control-panel-header">
-        <p className="eyebrow">Armillarium</p>
-        <h1>Sun-Earth-Moon</h1>
+        <h1>Armillarium</h1>
       </div>
       <div className="control-panel-content">
         <TimePanel />
